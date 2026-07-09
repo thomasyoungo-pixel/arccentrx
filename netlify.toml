@@ -1,0 +1,27 @@
+# Netlify deploy config for the ArcCentrx static site.
+# The site files live at the repo root, so there is no build step —
+# Netlify just publishes the folder as-is.
+
+[build]
+  publish = "."
+  command = ""
+
+# Sensible security headers for a static marketing site.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Let the HTML pages revalidate so content updates show up immediately,
+# while static assets can be cached briefly.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
