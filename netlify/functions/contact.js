@@ -23,7 +23,7 @@ exports.handler = async function (event) {
   const apiKey = process.env.ATTIO_API_KEY;
   if (!apiKey) {
     console.error("ATTIO_API_KEY is not set");
-    return json(500, { error: "ATTIO_API_KEY is not set on this deploy" });
+    return json(500, { error: "Server not configured" });
   }
 
   let body;
@@ -84,12 +84,7 @@ exports.handler = async function (event) {
     if (!assertRes.ok) {
       const detail = await assertRes.text();
       console.error("Attio person assert failed", assertRes.status, detail);
-      // NOTE: `detail` is surfaced to help debug setup. Once it works, this can
-      // be reverted to a generic message so raw API errors aren't exposed.
-      return json(502, {
-        error: "Attio rejected the contact (status " + assertRes.status + ")",
-        detail: String(detail).slice(0, 400)
-      });
+      return json(502, { error: "Could not save contact" });
     }
 
     const person = await assertRes.json();
@@ -128,10 +123,7 @@ exports.handler = async function (event) {
     return json(200, { ok: true });
   } catch (err) {
     console.error("Contact function error", err);
-    return json(502, {
-      error: "Request to Attio failed",
-      detail: String((err && err.message) || err).slice(0, 400)
-    });
+    return json(502, { error: "Could not save contact" });
   }
 };
 
