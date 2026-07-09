@@ -200,15 +200,24 @@
         body: JSON.stringify(payload)
       })
         .then(function (res) {
-          if (!res.ok) throw new Error("Bad response " + res.status);
-          return res.json();
+          return res.text().then(function (txt) {
+            var data = {};
+            try { data = JSON.parse(txt); } catch (e) {}
+            if (!res.ok) {
+              var msg = data.error || ("HTTP " + res.status);
+              if (data.detail) { msg += " — " + data.detail; }
+              throw new Error(msg);
+            }
+            return data;
+          });
         })
         .then(function () {
           setNote("Thanks — your message is on its way. We'll be in touch shortly.", false);
           form.reset();
         })
-        .catch(function () {
-          setNote("Something went wrong sending your message. Please email hello@arccentrx.com and we'll get right back to you.", true);
+        .catch(function (err) {
+          // Temporary debug detail during setup — surfaces the real server error.
+          setNote("Send failed: " + (err && err.message ? err.message : "unknown error") + " · or email hello@arccentrx.com", true);
         })
         .finally(function () {
           if (btn) { btn.disabled = false; }
