@@ -6,6 +6,10 @@
   publish = "."
   command = ""
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Sensible security headers for a static marketing site.
 [[headers]]
   for = "/*"

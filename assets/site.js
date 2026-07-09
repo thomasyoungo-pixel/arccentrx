@@ -161,15 +161,58 @@
     revealEls.forEach(function (el) { el.classList.add("in"); });
   }
 
-  /* ---- Contact form (front-end only demo) ---- */
+  /* ---- Contact form → Netlify Function → Attio ---- */
   var form = document.querySelector("[data-contact-form]");
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var note = form.querySelector(".form-note");
+      var btn = form.querySelector('button[type="submit"]');
+
+      function setNote(msg, isError) {
+        if (!note) return;
+        note.textContent = msg;
+        note.style.color = isError ? "#c0392b" : "";
+      }
+
+      // Honeypot: if a bot filled the hidden field, pretend success and stop.
+      if (form.elements.company_website && form.elements.company_website.value) {
+        setNote("Thanks — we'll be in touch shortly.", false);
+        form.reset();
+        return;
+      }
+
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      if (note) note.textContent = "Thanks — your message is ready to send. We'll be in touch shortly.";
-      form.reset();
+
+      var payload = {
+        name: (form.elements.name && form.elements.name.value || "").trim(),
+        email: (form.elements.email && form.elements.email.value || "").trim(),
+        subject: (form.elements.subject && form.elements.subject.value || "").trim(),
+        message: (form.elements.message && form.elements.message.value || "").trim()
+      };
+
+      if (btn) { btn.disabled = true; }
+      setNote("Sending…", false);
+
+      fetch("/.netlify/functions/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("Bad response " + res.status);
+          return res.json();
+        })
+        .then(function () {
+          setNote("Thanks — your message is on its way. We'll be in touch shortly.", false);
+          form.reset();
+        })
+        .catch(function () {
+          setNote("Something went wrong sending your message. Please email hello@arccentrx.com and we'll get right back to you.", true);
+        })
+        .finally(function () {
+          if (btn) { btn.disabled = false; }
+        });
     });
   }
 })();
