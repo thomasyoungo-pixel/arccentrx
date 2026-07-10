@@ -54,7 +54,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  /* clip (not hidden) prevents sideways scroll without creating a scroll
+     container that would break the sticky header */
+  overflow-x: clip;
 }
 a { text-decoration: none; color: inherit; }
 img, svg { display: block; max-width: 100%; }
@@ -107,6 +109,11 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--ink); line-height: 1.
 /* =========================================================================
    Header (injected by site.js)
    ========================================================================= */
+/* The header is injected into a <div data-site-header> wrapper. display:contents
+   removes that wrapper's box so the sticky header's containing block is the
+   full-height body — otherwise it can only stick within the short wrapper. */
+[data-site-header] { display: contents; }
+
 .site-header {
   position: sticky;
   top: 0;
