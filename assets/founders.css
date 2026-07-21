@@ -1,0 +1,119 @@
+/* =========================================================================
+   Founder profile pages (Mike / JoLynn / Thomas)
+   Loaded ONLY by founder-*.html, in addition to styles.css.
+   Kept separate so the shared/published styles are untouched while these
+   pages are still in the "back pocket."
+   ========================================================================= */
+
+/* ---------- Hero: portrait + identity ---------- */
+.founder-hero {
+  position: relative;
+  background:
+    radial-gradient(720px 340px at 85% -20%, rgba(93,202,165,.16), transparent 60%),
+    linear-gradient(160deg, #12233B, #1B2A4A);
+  color: #fff;
+  padding: clamp(40px, 6vw, 72px) 24px;
+  overflow: hidden;
+}
+.founder-hero-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: clamp(28px, 5vw, 56px);
+  align-items: center;
+}
+
+/* Portrait / photo */
+.founder-portrait {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(150deg, #24507f, #1c3a63);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 24px 60px rgba(0,0,0,.35);
+  position: relative;
+}
+.founder-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Placeholder shown until a real photo is dropped in */
+.founder-portrait .ph {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; color: #cfe0f2;
+}
+.founder-portrait .ph .initials { font-size: 64px; font-weight: 700; letter-spacing: .02em; color: #fff; opacity: .92; }
+.founder-portrait .ph .cap { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #9FB0C9; }
+
+/* Identity block */
+.founder-meta .breadcrumb { display: block; color: #7E8CA3; font-size: 13px; margin-bottom: 14px; }
+.founder-meta .breadcrumb a { color: #9FB0C9; font-weight: 500; }
+.founder-meta .breadcrumb a:hover { color: #5DCAA5; }
+.founder-meta h1 { color: #fff; font-size: clamp(30px, 5vw, 46px); line-height: 1.08; margin: 0 0 8px; }
+.founder-title {
+  display: inline-block; color: #5DCAA5; font-weight: 600; font-size: 16px;
+  letter-spacing: .01em; margin-bottom: 18px;
+}
+.founder-lead { color: var(--on-dark); font-size: clamp(15px, 1.8vw, 17px); line-height: 1.6; max-width: 480px; margin: 0 0 24px; }
+.founder-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-linkedin { background: #fff; color: #12233B; }
+.btn-linkedin:hover { background: #eef3f8; }
+.btn-linkedin svg { width: 16px; height: 16px; }
+
+/* ---------- Highlights: the "clearly highlighted" strip ---------- */
+.founder-highlights {
+  max-width: 1000px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+.hl-card {
+  background: #fff;
+  border: 1px solid var(--border-2);
+  border-left: 3px solid var(--teal);
+  border-radius: 12px;
+  padding: 24px 22px;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.hl-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.hl-card .k { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--teal-deep); margin-bottom: 8px; }
+.hl-card .v { color: var(--navy); font-size: clamp(20px, 2.4vw, 26px); font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; }
+.hl-card .s { color: var(--body-soft); font-size: 14px; line-height: 1.5; margin-top: 6px; }
+
+/* ---------- Body: prose + companies ---------- */
+.founder-section, .founder-companies { max-width: 760px; margin: 0 auto; }
+.founder-section h2, .founder-companies h2 {
+  color: var(--navy); font-size: clamp(24px, 3vw, 32px); line-height: 1.2; margin: 10px 0 22px;
+}
+.founder-prose p { color: var(--body); font-size: clamp(16px, 1.9vw, 18px); line-height: 1.75; }
+.founder-prose p + p { margin-top: 18px; }
+
+.founder-companies { max-width: 760px; margin: 0 auto; }
+.company-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.company-chip {
+  display: inline-block;
+  background: var(--bg-light);
+  border: 1px solid var(--border-2);
+  color: var(--navy);
+  font-size: 14px; font-weight: 500;
+  padding: 8px 16px; border-radius: 999px;
+  transition: border-color .2s var(--ease), background-color .2s var(--ease);
+}
+.company-chip:hover { border-color: var(--teal); background: #eef7f2; }
+
+/* Highlighted pull-line */
+.founder-pull {
+  max-width: 820px; margin: 0 auto; text-align: center;
+  color: var(--navy); font-size: clamp(20px, 2.8vw, 27px); font-weight: 500;
+  line-height: 1.4; letter-spacing: -0.01em;
+}
+.founder-pull .mark { color: var(--teal); font-family: Georgia, serif; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+  .founder-hero-inner { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .founder-portrait { max-width: 260px; }
+  .founder-meta { display: flex; flex-direction: column; align-items: center; }
+  .founder-lead { margin-left: auto; margin-right: auto; }
+  .founder-highlights { grid-template-columns: 1fr; max-width: 420px; }
+  .founder-actions { justify-content: center; }
+  .company-chips { justify-content: center; }
+}
