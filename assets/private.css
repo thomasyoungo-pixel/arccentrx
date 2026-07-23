@@ -29,8 +29,11 @@ body[data-page="private"] .site-header {
   border-bottom: 1px solid var(--pv-line-soft);
 }
 body[data-page="private"] .site-header.scrolled { box-shadow: 0 1px 0 var(--pv-line); }
-body[data-page="private"] .brand svg path[stroke="#1B2A4A"],
-body[data-page="private"] .brand svg g[fill="#1B2A4A"] { /* keep logo as-is; it reads on dark */ }
+/* Reverse the header logo so it's visible on the dark canvas
+   (recolor the navy marks to white; keep/brighten the teal accent). */
+body[data-page="private"] .brand svg [fill="#1B2A4A"] { fill: #FFFFFF; }
+body[data-page="private"] .brand svg [stroke="#1B2A4A"] { stroke: #FFFFFF; }
+body[data-page="private"] .brand svg [stroke="#1D9E75"] { stroke: #5DCAA5; }
 body[data-page="private"] .nav-link { color: var(--pv-soft); }
 body[data-page="private"] .nav-link:hover { color: #fff; background: rgba(255,255,255,.06); }
 body[data-page="private"] .nav-link.active { color: #fff; }
