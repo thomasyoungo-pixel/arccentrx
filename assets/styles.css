@@ -249,6 +249,15 @@ section.white { background: var(--bg); }
 .section-heading p { color: var(--body-soft); font-size: 16px; line-height: 1.65; }
 .view-all-wrap { text-align: center; margin-top: 36px; }
 
+/* Work-area tags (home: "What our work includes") */
+.work-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 860px; margin: 0 auto; }
+.work-tag {
+  display: inline-block; background: var(--bg-light); border: 1px solid var(--border-2);
+  color: var(--navy); font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 999px;
+  transition: border-color .2s var(--ease), background-color .2s var(--ease), transform .2s var(--ease);
+}
+.work-tag:hover { border-color: var(--teal); background: #eef7f2; transform: translateY(-2px); }
+
 /* =========================================================================
    Hero (home)
    ========================================================================= */
