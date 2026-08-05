@@ -1,20 +1,18 @@
 /**
- * Netlify Function: contact form -> Monday.com CRM
+ * Netlify Function: contact form -> Monday.com CRM ("Leads" board)
  *
- * Flow: validate submission -> create an item on a Monday board (named after the
- * person) -> post the full details (email, subject, message) as an update on
- * that item. Using an "update" means we don't need to know the board's column
- * IDs to capture everything; map into real columns later if you want (see the
- * optional MONDAY_EMAIL_COLUMN_ID below).
+ * Flow: validate submission -> create a Lead item (name + Email column) ->
+ * post the subject + message as an update on that item.
  *
  * Environment variables (Netlify -> Site configuration -> Environment variables):
- *   MONDAY_API_TOKEN        (required) Monday token: Monday -> your avatar ->
- *                           Administration/Developers -> My access tokens.
- *   MONDAY_BOARD_ID         (required) numeric ID of the board new contacts land on
- *                           (it's in the board URL: /boards/1234567890).
- *   MONDAY_GROUP_ID         (optional) group/section ID within that board.
- *   MONDAY_EMAIL_COLUMN_ID  (optional) an Email column's ID to store the email in a
- *                           structured field in addition to the update.
+ *   MONDAY_API_TOKEN  (required)  Monday personal API token
+ *   MONDAY_BOARD_ID   (required)  Leads board id (currently 18424288272)
+ *
+ * Optional column/group overrides (defaults match the current Leads board):
+ *   MONDAY_EMAIL_COLUMN_ID    default "lead_email"
+ *   MONDAY_SUBJECT_COLUMN_ID  if set, subject is written to this text column
+ *   MONDAY_MESSAGE_COLUMN_ID  if set (e.g. a Long Text column), message goes there too
+ *   MONDAY_GROUP_ID           if set, item is created in this group (else the board default)
  *
  * The token is read server-side only and is NEVER exposed to the browser.
  */
@@ -22,34 +20,12 @@
 const MONDAY_API = "https://api.monday.com/v2";
 
 exports.handler = async function (event) {
-  const token = process.env.MONDAY_API_TOKEN;
-  const boardId = process.env.MONDAY_BOARD_ID;
-
-  // --- TEMP diagnostic: GET /.netlify/functions/contact?columns=1 returns the
-  //     board's column IDs/titles/types + groups so we can map the form fields.
-  //     Remove this block once the mapping is wired in. ---
-  if (event.httpMethod === "GET") {
-    if (!token || !boardId) return json(500, { error: "Server not configured" });
-    if (event.queryStringParameters && "columns" in event.queryStringParameters) {
-      try {
-        const q = "query ($b: [ID!]) { boards (ids: $b) { id name columns { id title type } groups { id title } } }";
-        const data = await gql(q, { b: [String(boardId)] }, {
-          "Content-Type": "application/json",
-          Authorization: token,
-          "API-Version": "2023-10"
-        });
-        return json(200, data.data || data);
-      } catch (e) {
-        return json(502, { error: String((e && e.message) || e) });
-      }
-    }
-    return json(405, { error: "Method not allowed" });
-  }
-
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
 
+  const token = process.env.MONDAY_API_TOKEN;
+  const boardId = process.env.MONDAY_BOARD_ID;
   if (!token || !boardId) {
     console.error("MONDAY_API_TOKEN or MONDAY_BOARD_ID is not set");
     return json(500, { error: "Server not configured" });
@@ -82,37 +58,40 @@ exports.handler = async function (event) {
     "API-Version": "2023-10"
   };
 
-  // Optional: also write the email into a real Email column if its ID is provided.
+  // Map the form fields into board columns.
   const columnValues = {};
-  if (process.env.MONDAY_EMAIL_COLUMN_ID) {
-    columnValues[process.env.MONDAY_EMAIL_COLUMN_ID] = { email: email, text: email };
+  const emailCol = process.env.MONDAY_EMAIL_COLUMN_ID || "lead_email";
+  columnValues[emailCol] = { email: email, text: email };
+  if (process.env.MONDAY_SUBJECT_COLUMN_ID && subject) {
+    columnValues[process.env.MONDAY_SUBJECT_COLUMN_ID] = subject;
+  }
+  if (process.env.MONDAY_MESSAGE_COLUMN_ID && message) {
+    columnValues[process.env.MONDAY_MESSAGE_COLUMN_ID] = message;
   }
 
   try {
-    // 1) Create the contact as a board item.
+    // 1) Create the Lead item.
     const createQuery =
       "mutation ($board: ID!, $group: String, $name: String!, $cols: JSON) {" +
       "  create_item (board_id: $board, group_id: $group, item_name: $name, column_values: $cols) { id }" +
       "}";
-    const createVars = {
+    const created = await gql(createQuery, {
       board: String(boardId),
       group: process.env.MONDAY_GROUP_ID || null,
       name: name || email,
       cols: JSON.stringify(columnValues)
-    };
+    }, headers);
 
-    const created = await gql(createQuery, createVars, headers);
     const itemId =
       created && created.data && created.data.create_item && created.data.create_item.id;
-
     if (!itemId) {
       console.error("Monday create_item failed", JSON.stringify(created));
       return json(502, { error: "Could not save contact" });
     }
 
-    // 2) Post the details as an update on the item (best effort).
+    // 2) Post the subject + message as an update on the Lead (best effort).
     const detail =
-      "New website contact form submission\n\n" +
+      "Website contact form submission\n\n" +
       "Name: " + (name || "(not given)") + "\n" +
       "Email: " + email +
       (subject ? "\nSubject: " + subject : "") +
@@ -125,7 +104,7 @@ exports.handler = async function (event) {
     const updated = await gql(updateQuery, { item: String(itemId), bodyText: detail }, headers);
     if (updated && updated.errors) {
       console.error("Monday create_update failed", JSON.stringify(updated.errors));
-      // The item was created either way — don't fail the whole request.
+      // The lead was created either way — don't fail the whole request.
     }
 
     return json(200, { ok: true });
@@ -146,7 +125,6 @@ async function gql(query, variables, headers) {
     throw new Error("Monday HTTP " + res.status + " " + JSON.stringify(data));
   }
   if (data.errors) {
-    // GraphQL-level errors come back with HTTP 200 — surface them to the caller.
     console.error("Monday GraphQL errors", JSON.stringify(data.errors));
   }
   return data;
