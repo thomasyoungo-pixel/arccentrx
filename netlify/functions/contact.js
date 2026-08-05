@@ -1,18 +1,22 @@
 /**
  * Netlify Function: contact form -> Monday.com CRM ("Leads" board)
  *
- * Flow: validate submission -> create a Lead item (name + Email column) ->
- * post the subject + message as an update on that item.
+ * Flow: look up the board's columns, map the form fields into the right ones
+ * (by column title / type, so no fragile hard-coded IDs), create a Lead item,
+ * then post the full submission as an update on that item.
+ *
+ * It writes to columns named (case-insensitive):
+ *   "Email"    -> the email  (also matches any email-type column)
+ *   "Message"  -> the message
+ *   "Subject"  -> the subject (only if such a column exists)
+ * Anything without a matching column still lands in the item's Updates.
  *
  * Environment variables (Netlify -> Site configuration -> Environment variables):
  *   MONDAY_API_TOKEN  (required)  Monday personal API token
- *   MONDAY_BOARD_ID   (required)  Leads board id (currently 18424288272)
- *
- * Optional column/group overrides (defaults match the current Leads board):
- *   MONDAY_EMAIL_COLUMN_ID    default "lead_email"
- *   MONDAY_SUBJECT_COLUMN_ID  if set, subject is written to this text column
- *   MONDAY_MESSAGE_COLUMN_ID  if set (e.g. a Long Text column), message goes there too
- *   MONDAY_GROUP_ID           if set, item is created in this group (else the board default)
+ *   MONDAY_BOARD_ID   (required)  Leads board id
+ *   MONDAY_GROUP_ID   (optional)  group to create the item in (else board default)
+ *   MONDAY_EMAIL_COLUMN_ID / MONDAY_MESSAGE_COLUMN_ID / MONDAY_SUBJECT_COLUMN_ID
+ *                     (optional)  force a specific column id instead of matching by title
  *
  * The token is read server-side only and is NEVER exposed to the browser.
  */
@@ -58,18 +62,34 @@ exports.handler = async function (event) {
     "API-Version": "2023-10"
   };
 
-  // Map the form fields into board columns.
-  const columnValues = {};
-  const emailCol = process.env.MONDAY_EMAIL_COLUMN_ID || "lead_email";
-  columnValues[emailCol] = { email: email, text: email };
-  if (process.env.MONDAY_SUBJECT_COLUMN_ID && subject) {
-    columnValues[process.env.MONDAY_SUBJECT_COLUMN_ID] = subject;
-  }
-  if (process.env.MONDAY_MESSAGE_COLUMN_ID && message) {
-    columnValues[process.env.MONDAY_MESSAGE_COLUMN_ID] = message;
-  }
-
   try {
+    // Resolve the board's columns so we can map by title/type instead of raw IDs.
+    let cols = [];
+    try {
+      cols = await getColumns(boardId, headers);
+    } catch (e) {
+      console.error("getColumns failed (falling back to defaults)", e);
+    }
+
+    const columnValues = {};
+
+    // Email -> "Email" column (or any email-type column); defaults to lead_email.
+    const emailCol = findCol(cols, { id: process.env.MONDAY_EMAIL_COLUMN_ID, title: "Email", type: "email" });
+    const emailColId = (emailCol && emailCol.id) || process.env.MONDAY_EMAIL_COLUMN_ID || "lead_email";
+    columnValues[emailColId] = { email: email, text: email };
+
+    // Message -> "Message" column, if one exists.
+    const msgCol = findCol(cols, { id: process.env.MONDAY_MESSAGE_COLUMN_ID, title: "Message" });
+    if (msgCol && message) {
+      columnValues[msgCol.id] = colTextValue(msgCol.type, message);
+    }
+
+    // Subject -> "Subject" column, if one exists.
+    const subjCol = findCol(cols, { id: process.env.MONDAY_SUBJECT_COLUMN_ID, title: "Subject" });
+    if (subjCol && subject) {
+      columnValues[subjCol.id] = colTextValue(subjCol.type, subject);
+    }
+
     // 1) Create the Lead item.
     const createQuery =
       "mutation ($board: ID!, $group: String, $name: String!, $cols: JSON) {" +
@@ -89,7 +109,7 @@ exports.handler = async function (event) {
       return json(502, { error: "Could not save contact" });
     }
 
-    // 2) Post the subject + message as an update on the Lead (best effort).
+    // 2) Post the full submission as an update on the Lead (belt-and-suspenders).
     const detail =
       "Website contact form submission\n\n" +
       "Name: " + (name || "(not given)") + "\n" +
@@ -113,6 +133,34 @@ exports.handler = async function (event) {
     return json(502, { error: "Could not save contact" });
   }
 };
+
+async function getColumns(boardId, headers) {
+  const q = "query ($b: [ID!]) { boards (ids: $b) { columns { id title type } } }";
+  const data = await gql(q, { b: [String(boardId)] }, headers);
+  return (data && data.data && data.data.boards && data.data.boards[0] && data.data.boards[0].columns) || [];
+}
+
+// Find a column by explicit id, then by title (case-insensitive), then by type.
+function findCol(cols, opts) {
+  if (opts.id) {
+    const byId = cols.find(function (c) { return c.id === opts.id; });
+    if (byId) return byId;
+  }
+  if (opts.title) {
+    const byTitle = cols.find(function (c) { return c.title && c.title.toLowerCase() === opts.title.toLowerCase(); });
+    if (byTitle) return byTitle;
+  }
+  if (opts.type) {
+    const byType = cols.find(function (c) { return c.type === opts.type; });
+    if (byType) return byType;
+  }
+  return null;
+}
+
+// Long Text columns take { text: "..." }; plain Text columns take a string.
+function colTextValue(type, text) {
+  return type === "long_text" ? { text: text } : text;
+}
 
 async function gql(query, variables, headers) {
   const res = await fetch(MONDAY_API, {
