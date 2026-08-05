@@ -22,12 +22,34 @@
 const MONDAY_API = "https://api.monday.com/v2";
 
 exports.handler = async function (event) {
+  const token = process.env.MONDAY_API_TOKEN;
+  const boardId = process.env.MONDAY_BOARD_ID;
+
+  // --- TEMP diagnostic: GET /.netlify/functions/contact?columns=1 returns the
+  //     board's column IDs/titles/types + groups so we can map the form fields.
+  //     Remove this block once the mapping is wired in. ---
+  if (event.httpMethod === "GET") {
+    if (!token || !boardId) return json(500, { error: "Server not configured" });
+    if (event.queryStringParameters && "columns" in event.queryStringParameters) {
+      try {
+        const q = "query ($b: [ID!]) { boards (ids: $b) { id name columns { id title type } groups { id title } } }";
+        const data = await gql(q, { b: [String(boardId)] }, {
+          "Content-Type": "application/json",
+          Authorization: token,
+          "API-Version": "2023-10"
+        });
+        return json(200, data.data || data);
+      } catch (e) {
+        return json(502, { error: String((e && e.message) || e) });
+      }
+    }
+    return json(405, { error: "Method not allowed" });
+  }
+
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
 
-  const token = process.env.MONDAY_API_TOKEN;
-  const boardId = process.env.MONDAY_BOARD_ID;
   if (!token || !boardId) {
     console.error("MONDAY_API_TOKEN or MONDAY_BOARD_ID is not set");
     return json(500, { error: "Server not configured" });
