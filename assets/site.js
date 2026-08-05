@@ -61,7 +61,6 @@
         '<a href="assess.html"><strong>Assess</strong><span>Find out what\'s actually true</span></a>' +
         '<a href="align.html"><strong>Align</strong><span>Point the org one direction</span></a>' +
         '<a href="accelerate.html"><strong>Accelerate</strong><span>Embed and run the work</span></a>' +
-        '<a href="private.html" class="dd-private"><strong>ArcCentrx Private</strong><span>Founder-led flagship division</span></a>' +
       '</div>' +
     '</div>' +
     '<a class="nav-link' + isActive("about") + '" href="about.html">About</a>';
