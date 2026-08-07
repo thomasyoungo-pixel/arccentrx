@@ -1,5 +1,5 @@
 /* =========================================================================
-   ArcCentrx — shared site behavior
+   ArcCentrx - shared site behavior
    Injects a consistent header + footer on every page, and wires up the
    interactive bits: mobile nav, Services dropdown, sticky-header shadow,
    scroll-reveal, contact form, and the auto-updating copyright year.
@@ -82,7 +82,7 @@
     '<footer class="site-footer">' +
       '<div class="footer-top">' +
         '<div class="footer-brand">' + LOGO_REVERSED +
-          '<p>Operators, not advisors. One integrated team that assesses, aligns, and accelerates — and does the work.</p>' +
+          '<p>The team you want in the room. We assess, align, and accelerate, and we do the work.</p>' +
         '</div>' +
         '<div class="footer-col"><h4>Company</h4>' +
           '<a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a>' +
@@ -177,7 +177,7 @@
 
       // Honeypot: if a bot filled the hidden field, pretend success and stop.
       if (form.elements.company_website && form.elements.company_website.value) {
-        setNote("Thanks — we'll be in touch shortly.", false);
+        setNote("Thanks, we'll be in touch shortly.", false);
         form.reset();
         return;
       }
@@ -204,7 +204,7 @@
           return res.json();
         })
         .then(function () {
-          setNote("Thanks — your message is on its way. We'll be in touch shortly.", false);
+          setNote("Thanks, your message is on its way. We'll be in touch shortly.", false);
           form.reset();
         })
         .catch(function () {
