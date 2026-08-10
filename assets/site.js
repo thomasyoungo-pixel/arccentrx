@@ -26,7 +26,7 @@
     '<g fill="none" stroke-linecap="round">' +
     '<path d="M219.0 25.8 L239.0 44.5" stroke="#1B2A4A" stroke-width="4.5"/>' +
     '<path d="M219.0 44.5 L246.0 17" stroke="#1D9E75" stroke-width="4.5"/></g>' +
-    '<text x="249" y="24" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1B2A4A">℠</text></svg>';
+    '<text x="247" y="21" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#1B2A4A">℠</text></svg>';
 
   var LOGO_REVERSED =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-14 -8 276.31 86.81" aria-label="ArcCentrx">' +
