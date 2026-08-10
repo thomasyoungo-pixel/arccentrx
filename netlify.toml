@@ -10,9 +10,9 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-# "Coming soon" gate: shows the holding page on the public domain, while
-# hi.arccentrx.com serves the full site for the team. Remove this block and
-# netlify/edge-functions/gate.js to launch publicly.
+# "Coming soon" gate: shows the holding page on every public URL, while
+# visiting /comingsoon unlocks the full site for the team via a preview cookie.
+# Remove this block and netlify/edge-functions/gate.js to launch publicly.
 [[edge_functions]]
   path = "/*"
   function = "gate"
