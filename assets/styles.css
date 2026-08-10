@@ -290,7 +290,7 @@ section.white { background: var(--bg); }
   margin: 0 auto 22px;
 }
 .hero h1 .accent { color: var(--teal-bright); }
-.sm-mark { font-size: .28em; font-weight: 500; vertical-align: super; margin-left: .08em; line-height: 0; }
+.sm-mark { font-size: .28em; font-weight: 500; position: relative; top: -1.7em; vertical-align: baseline; margin-left: .08em; line-height: 0; }
 .hero .subhead {
   color: var(--on-dark);
   font-size: clamp(16px, 2vw, 19px);
