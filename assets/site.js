@@ -11,7 +11,7 @@
 
   /* ---- Brand marks (navy for header, reversed for footer) ---- */
   var LOGO_NAVY =
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 259 70" aria-label="ArcCentrx">' +
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 266 70" aria-label="ArcCentrx service mark">' +
     '<g fill="none" stroke-linecap="round" stroke-linejoin="round">' +
     '<path d="M4 60 L27 10 L50 60" stroke="#1B2A4A" stroke-width="8"/>' +
     '<path d="M9.52 48 A25.3 25.3 0 0 1 44.48 48" stroke="#1B2A4A" stroke-width="6"/></g>' +
@@ -25,7 +25,8 @@
     '<g transform="translate(201.9449,44.5000) scale(0.017578,-0.017578)"><path d="M142 0V830Q142 944 136 1082H306Q314 898 314 861H318Q361 1000 417.0 1051.0Q473 1102 575 1102Q611 1102 648 1092V927Q612 937 552 937Q440 937 381.0 840.5Q322 744 322 564V0Z"/></g></g>' +
     '<g fill="none" stroke-linecap="round">' +
     '<path d="M219.0 25.8 L239.0 44.5" stroke="#1B2A4A" stroke-width="4.5"/>' +
-    '<path d="M219.0 44.5 L246.0 17" stroke="#1D9E75" stroke-width="4.5"/></g></svg>';
+    '<path d="M219.0 44.5 L246.0 17" stroke="#1D9E75" stroke-width="4.5"/></g>' +
+    '<text x="249" y="24" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="600" fill="#1B2A4A">℠</text></svg>';
 
   var LOGO_REVERSED =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-14 -8 276.31 86.81" aria-label="ArcCentrx">' +
