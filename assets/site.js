@@ -95,7 +95,7 @@
           '<a href="blog.html">Blog</a><a href="contact.html">Get in touch</a>' +
         '</div>' +
       '</div>' +
-      '<div class="copyright">© <span data-year></span> ArcCentrx. All rights reserved.</div>' +
+      '<div class="copyright">© <span data-year></span> ArcCentrx. All rights reserved.<span class="sep">·</span><a href="privacy.html">Privacy Policy</a><span class="sep">·</span><a href="terms.html">Terms of Service</a></div>' +
     '</footer>';
 
   /* ---- Inject ---- */

@@ -571,6 +571,26 @@ section.white { background: var(--bg); }
   border-top: 1px solid rgba(255,255,255,.1);
   padding: 22px 0 26px;
 }
+.copyright a { color: var(--on-dark-soft); text-decoration: none; }
+.copyright a:hover { color: var(--teal-bright); }
+.copyright .sep { margin: 0 8px; opacity: .5; }
+
+/* =========================================================================
+   Legal pages (Terms, Privacy)
+   ========================================================================= */
+.legal-prose { max-width: 800px; margin: 0 auto; color: var(--body); }
+.legal-prose h2 { font-size: clamp(19px, 2.3vw, 24px); color: var(--navy); margin: 40px 0 12px; }
+.legal-prose h2:first-child { margin-top: 0; }
+.legal-prose h3 { font-size: 16.5px; color: var(--navy); margin: 24px 0 8px; }
+.legal-prose p { font-size: 16px; line-height: 1.75; margin-bottom: 14px; }
+.legal-prose ul { margin: 0 0 16px 22px; }
+.legal-prose li { font-size: 16px; line-height: 1.7; margin-bottom: 6px; }
+.legal-prose a { color: var(--teal-deep); }
+.legal-prose .effective { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 26px; }
+.legal-table { width: 100%; border-collapse: collapse; margin: 10px 0 22px; font-size: 13.5px; }
+.legal-table th, .legal-table td { border: 1px solid var(--border-2); padding: 9px 12px; text-align: left; vertical-align: top; line-height: 1.55; }
+.legal-table th { background: var(--bg-light); color: var(--navy); font-weight: 600; }
+.legal-table-wrap { overflow-x: auto; }
 
 /* =========================================================================
    Scroll reveal
