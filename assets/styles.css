@@ -417,6 +417,14 @@ section.white { background: var(--bg); }
 .split-text h2 a:hover { color: var(--teal-deep); }
 .split-text .sub { color: var(--teal-deep); font-weight: 600; font-size: 16px; margin-bottom: 14px; }
 .split-text p { color: var(--body-soft); font-size: 15.5px; line-height: 1.72; margin-bottom: 20px; }
+.split-text .eyebrow { margin-bottom: 12px; }
+
+/* Service deep-dive question rows */
+.qa-list { list-style: none; margin: 0; padding: 0; }
+.qa-list li { position: relative; padding-left: 24px; color: var(--body); font-size: 15.5px; line-height: 1.58; margin-bottom: 11px; }
+.qa-list li:last-child { margin-bottom: 0; }
+.qa-list li::before { content: ""; position: absolute; left: 0; top: 9px; width: 13px; height: 2px; background: var(--teal); border-radius: 2px; }
+.split-text p.qa-close { color: var(--navy); font-weight: 500; margin: 22px 0 0; }
 .placeholder-note {
   display: inline-flex; align-items: center; gap: 8px;
   color: var(--on-dark-soft); font-size: 13px;
