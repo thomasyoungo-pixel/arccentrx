@@ -400,6 +400,7 @@ section.white { background: var(--bg); }
    Split row (image + text)
    ========================================================================= */
 .split-row { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(32px, 5vw, 64px); max-width: var(--maxw); margin: 0 auto; }
+.split-row[id] { scroll-margin-top: 96px; }
 .split-row + .split-row { margin-top: clamp(40px, 6vw, 72px); }
 .split-row.reverse .split-image { order: 2; }
 .split-visual {
