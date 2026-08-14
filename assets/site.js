@@ -59,7 +59,7 @@
       '<a class="nav-link' + servicesActive + '" href="services.html">Services ' + caret + '</a>' +
       '<div class="dropdown">' +
         '<a href="index.html#ai-strategy"><strong>AI Strategy</strong><span>Prove the value, fix what isn\'t earning</span></a>' +
-        '<a href="index.html#fintech-infrastructure"><strong>Fintech Infrastructure</strong><span>Architecture that survives scale</span></a>' +
+        '<a href="index.html#fintech-infrastructure"><strong>Technology Infrastructure</strong><span>Architecture that survives scale</span></a>' +
         '<a href="index.html#compliance-governance"><strong>Compliance and Governance</strong><span>Regulated without the drag</span></a>' +
       '</div>' +
     '</div>' +
