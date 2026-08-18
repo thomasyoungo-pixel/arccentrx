@@ -426,6 +426,23 @@ section.white { background: var(--bg); }
 .qa-list li:last-child { margin-bottom: 0; }
 .qa-list li::before { content: ""; position: absolute; left: 0; top: 9px; width: 13px; height: 2px; background: var(--teal); border-radius: 2px; }
 .split-text p.qa-close { color: var(--navy); font-weight: 500; margin: 22px 0 0; }
+
+/* Methodology page components */
+.split-visual img { width: 68%; height: auto; }
+.you-get-label { color: var(--navy); font-weight: 600; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; margin: 4px 0 10px; }
+.principles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 44px); max-width: 920px; margin: 0 auto; }
+.principle .step-number { margin: 0 0 16px; }
+.principle h4 { color: var(--navy); font-size: 17.5px; margin-bottom: 8px; }
+.principle p { color: var(--body-soft); font-size: 15px; line-height: 1.66; }
+.outcomes-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 3vw, 32px); max-width: var(--maxw); margin: 0 auto; }
+.outcome { text-align: center; }
+.outcome h4 { color: var(--teal-deep); font-size: 16px; letter-spacing: .01em; margin-bottom: 8px; }
+.outcome p { color: var(--body-soft); font-size: 14.5px; line-height: 1.6; }
+.method-closing { text-align: center; max-width: 720px; margin: clamp(30px, 4vw, 46px) auto 0; color: var(--navy); font-size: clamp(17px, 2.2vw, 21px); font-weight: 500; line-height: 1.5; }
+@media (max-width: 760px) {
+  .principles-grid { grid-template-columns: 1fr; max-width: 460px; }
+  .outcomes-strip { grid-template-columns: 1fr 1fr; }
+}
 .placeholder-note {
   display: inline-flex; align-items: center; gap: 8px;
   color: var(--on-dark-soft); font-size: 13px;

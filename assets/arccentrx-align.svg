@@ -1,0 +1,15 @@
+<svg width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>Align</title>
+  <desc>Three parallel horizontal lines with end ticks and a teal left guide, representing intentional alignment</desc>
+  <rect width="800" height="800" fill="#FFFFFF"/>
+  <line x1="100" y1="270" x2="100" y2="530" stroke="#1D9E75" stroke-width="2.5"/>
+  <line x1="100" y1="296" x2="700" y2="296" stroke="#1B2A4A" stroke-width="1.5"/>
+  <line x1="100" y1="287" x2="100" y2="305" stroke="#1B2A4A" stroke-width="1.5"/>
+  <line x1="700" y1="287" x2="700" y2="305" stroke="#1B2A4A" stroke-width="1.5"/>
+  <line x1="100" y1="400" x2="700" y2="400" stroke="#1B2A4A" stroke-width="1.5"/>
+  <line x1="100" y1="391" x2="100" y2="409" stroke="#1B2A4A" stroke-width="1.5"/>
+  <line x1="700" y1="391" x2="700" y2="409" stroke="#1B2A4A" stroke-width="1.5"/>
+  <line x1="100" y1="504" x2="700" y2="504" stroke="#1B2A4A" stroke-width="1.5"/>
+  <line x1="100" y1="495" x2="100" y2="513" stroke="#1B2A4A" stroke-width="1.5"/>
+  <line x1="700" y1="495" x2="700" y2="513" stroke="#1B2A4A" stroke-width="1.5"/>
+</svg>
