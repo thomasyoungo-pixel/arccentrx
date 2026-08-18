@@ -51,18 +51,20 @@
   var page = document.body.getAttribute("data-page") || "home";
 
   function isActive(p) { return page === p ? " active" : ""; }
-  var servicesActive = (["services", "assess", "align", "accelerate", "private"].indexOf(page) > -1) ? " active" : "";
+  var servicesActive = (page === "services") ? " active" : "";
 
   var navMarkup =
     '<a class="nav-link' + isActive("home") + '" href="index.html">Home</a>' +
     '<div class="nav-item">' +
       '<a class="nav-link' + servicesActive + '" href="services.html">Services ' + caret + '</a>' +
       '<div class="dropdown">' +
-        '<a href="index.html#ai-strategy"><strong>AI Strategy</strong><span>Prove the value, fix what isn\'t earning</span></a>' +
-        '<a href="index.html#fintech-infrastructure"><strong>Technology Infrastructure</strong><span>Architecture that survives scale</span></a>' +
-        '<a href="index.html#compliance-governance"><strong>Compliance and Governance</strong><span>Regulated without the drag</span></a>' +
+        '<a href="services.html#ai-strategy"><strong>AI Strategy</strong><span>Prove the value, fix what isn\'t earning</span></a>' +
+        '<a href="services.html#technology-infrastructure"><strong>Technology Infrastructure</strong><span>Architecture that survives scale</span></a>' +
+        '<a href="services.html#compliance-governance"><strong>Compliance and Governance</strong><span>Regulated without the drag</span></a>' +
+        '<a href="services.html"><strong>All services</strong><span>The full catalog of nine</span></a>' +
       '</div>' +
     '</div>' +
+    '<a class="nav-link' + isActive("methodology") + '" href="methodology.html">Methodology</a>' +
     '<a class="nav-link' + isActive("about") + '" href="about.html">About</a>';
 
   var headerHTML =
@@ -85,10 +87,10 @@
           '<p>The team you want in the room. We assess, align, and accelerate, and we do the work.</p>' +
         '</div>' +
         '<div class="footer-col"><h4>Company</h4>' +
-          '<a href="about.html">About</a><a href="services.html">Services</a><a href="contact.html">Contact</a>' +
+          '<a href="about.html">About</a><a href="methodology.html">Methodology</a><a href="contact.html">Contact</a>' +
         '</div>' +
         '<div class="footer-col"><h4>Services</h4>' +
-          '<a href="assess.html">Assess</a><a href="align.html">Align</a><a href="accelerate.html">Accelerate</a>' +
+          '<a href="services.html#ai-strategy">AI Strategy</a><a href="services.html#technology-infrastructure">Technology Infrastructure</a><a href="services.html#compliance-governance">Compliance and Governance</a><a href="services.html">All services</a>' +
         '</div>' +
         '<div class="footer-col"><h4>Resources</h4>' +
           '<a href="blog.html">Blog</a><a href="contact.html">Get in touch</a>' +
