@@ -59,15 +59,14 @@
       '<a class="nav-link' + servicesActive + '" href="services.html">Services ' + caret + '</a>' +
       '<div class="dropdown mega">' +
         '<a href="services.html#ai-strategy"><strong>AI Strategy</strong><span>What your AI actually returned</span></a>' +
-        '<a href="services.html#technology-infrastructure"><strong>Technology Infrastructure</strong><span>Architecture that holds at scale</span></a>' +
-        '<a href="services.html#compliance-governance"><strong>Compliance and Governance</strong><span>Audit readiness built in</span></a>' +
-        '<a href="services.html#ma-readiness"><strong>M&amp;A Readiness and Integration</strong><span>Diligence through integration</span></a>' +
-        '<a href="services.html#organizational-design"><strong>Organizational Design</strong><span>Structure, roles, decision rights</span></a>' +
-        '<a href="services.html#operational-optimization"><strong>Operational Optimization</strong><span>Throughput, quality, and cost</span></a>' +
-        '<a href="services.html#fractional-executives"><strong>Fractional and Interim Executives</strong><span>The seat, filled by an operator</span></a>' +
         '<a href="services.html#growth-strategy"><strong>Growth Strategy</strong><span>Growth built as a system</span></a>' +
-        '<a class="dropdown-wide" href="services.html#reporting-analytics"><strong>Reporting and Analytics</strong><span>Numbers you can act on</span></a>' +
-        '<a class="dropdown-all" href="services.html"><strong>All services</strong><span>The full catalog of nine</span></a>' +
+        '<a href="services.html#technology-infrastructure"><strong>Technology Infrastructure</strong><span>Architecture that holds at scale</span></a>' +
+        '<a href="services.html#operational-optimization"><strong>Operational Optimization</strong><span>Throughput, quality, and cost</span></a>' +
+        '<a href="services.html#ma-readiness"><strong>M&amp;A Readiness and Integration</strong><span>Diligence through integration</span></a>' +
+        '<a href="services.html#compliance-governance"><strong>Compliance and Governance</strong><span>Audit readiness built in</span></a>' +
+        '<a href="services.html#organizational-design"><strong>Organizational Design</strong><span>Structure, roles, decision rights</span></a>' +
+        '<a href="services.html#reporting-analytics"><strong>Reporting and Analytics</strong><span>Numbers you can act on</span></a>' +
+        '<a class="dropdown-all" href="services.html"><strong>All services</strong><span>The full catalog</span></a>' +
       '</div>' +
     '</div>' +
     '<a class="nav-link' + isActive("methodology") + '" href="methodology.html">Methodology</a>' +
@@ -98,13 +97,12 @@
         '</div>' +
         '<div class="footer-col"><h4>Services</h4>' +
           '<a href="services.html#ai-strategy">AI Strategy</a>' +
-          '<a href="services.html#technology-infrastructure">Technology Infrastructure</a>' +
-          '<a href="services.html#compliance-governance">Compliance and Governance</a>' +
-          '<a href="services.html#ma-readiness">M&amp;A Readiness and Integration</a>' +
-          '<a href="services.html#organizational-design">Organizational Design</a>' +
-          '<a href="services.html#operational-optimization">Operational Optimization</a>' +
-          '<a href="services.html#fractional-executives">Fractional and Interim Executives</a>' +
           '<a href="services.html#growth-strategy">Growth Strategy</a>' +
+          '<a href="services.html#technology-infrastructure">Technology Infrastructure</a>' +
+          '<a href="services.html#operational-optimization">Operational Optimization</a>' +
+          '<a href="services.html#ma-readiness">M&amp;A Readiness and Integration</a>' +
+          '<a href="services.html#compliance-governance">Compliance and Governance</a>' +
+          '<a href="services.html#organizational-design">Organizational Design</a>' +
           '<a href="services.html#reporting-analytics">Reporting and Analytics</a>' +
         '</div>' +
         '<div class="footer-col"><h4>Resources</h4>' +
