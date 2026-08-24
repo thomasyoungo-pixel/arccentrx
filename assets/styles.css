@@ -671,6 +671,12 @@ section[id] { scroll-margin-top: 92px; }
   border-top: 1px solid rgba(255,255,255,.1);
   padding: 22px 0 26px;
 }
+/* Brand tagline (top band of the footer) */
+.tagline-band { max-width: var(--maxw); margin: 0 auto clamp(30px, 4vw, 44px); padding-bottom: clamp(28px, 4vw, 40px); border-bottom: 1px solid rgba(255,255,255,.1); text-align: center; }
+.tagline { color: #fff; font-size: clamp(20px, 2.8vw, 28px); font-weight: 700; letter-spacing: -0.01em; }
+.tagline .accent { color: var(--teal-bright); }
+.tagline sup { font-size: .5em; font-weight: 500; vertical-align: super; margin-left: .04em; }
+
 .copyright a { color: var(--on-dark-soft); text-decoration: none; }
 .copyright a:hover { color: var(--teal-bright); }
 .copyright .sep { margin: 0 8px; opacity: .5; }

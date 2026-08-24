@@ -88,6 +88,7 @@
 
   var footerHTML =
     '<footer class="site-footer">' +
+      '<div class="tagline-band"><span class="tagline">Strategy Built to <span class="accent">Run</span><sup>&#8480;</sup></span></div>' +
       '<div class="footer-top">' +
         '<div class="footer-brand">' + LOGO_REVERSED +
           '<p>The team you want in the room. We assess, align, and accelerate, and we do the work.</p>' +
