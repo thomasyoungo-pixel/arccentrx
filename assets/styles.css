@@ -193,6 +193,10 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--ink); line-height: 1.
 .dropdown a span { font-size: 12px; color: var(--muted); }
 .dropdown a:hover { background: var(--bg-light); color: var(--navy); }
 .dropdown a:hover strong { color: var(--teal-deep); }
+.dropdown.mega { width: 540px; max-width: calc(100vw - 40px); display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.dropdown.mega .dropdown-wide { grid-column: 1 / -1; text-align: center; }
+.dropdown.mega .dropdown-all { grid-column: 1 / -1; text-align: center; border-top: 1px solid var(--border-2); margin-top: 4px; padding-top: 12px; }
+@media (max-width: 768px) { .dropdown.mega { width: auto; grid-template-columns: 1fr; } }
 /* Premium tier item, set apart in the Services dropdown */
 .dropdown a.dd-private { border-top: 1px solid var(--border-2); margin-top: 6px; padding-top: 12px; }
 .dropdown a.dd-private strong { color: #A9843A; }
