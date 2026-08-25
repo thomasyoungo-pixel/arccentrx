@@ -54,7 +54,7 @@
   var servicesActive = (page === "services") ? " active" : "";
 
   var navMarkup =
-    '<a class="nav-link' + isActive("home") + '" href="index.html">Home</a>' +
+    '<a class="nav-link' + isActive("home") + '" href="/">Home</a>' +
     '<div class="nav-item">' +
       '<a class="nav-link' + servicesActive + '" href="services.html">Services ' + caret + '</a>' +
       '<div class="dropdown mega">' +
@@ -74,7 +74,7 @@
 
   var headerHTML =
     '<header class="site-header"><div class="header-inner">' +
-      '<a class="brand" href="index.html">' + LOGO_NAVY + '</a>' +
+      '<a class="brand" href="/">' + LOGO_NAVY + '</a>' +
       '<nav class="site-nav" aria-label="Primary">' + navMarkup + '</nav>' +
       '<div class="header-cta">' +
         '<a class="btn btn-teal" href="contact.html">Get in touch</a>' +

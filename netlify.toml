@@ -10,13 +10,6 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-# "Coming soon" gate: shows the holding page on every public URL, while
-# visiting /preview unlocks the full site for the team via a preview cookie.
-# Remove this block and netlify/edge-functions/gate.js to launch publicly.
-[[edge_functions]]
-  path = "/*"
-  function = "gate"
-
 # Sensible security headers for a static marketing site.
 [[headers]]
   for = "/*"

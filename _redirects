@@ -5,3 +5,7 @@
 /assess             /methodology.html#assess       301
 /align              /methodology.html#align        301
 /accelerate         /methodology.html#accelerate   301
+
+# WIP: keep the unfinished Private sub-site off the public site
+/private.html   /   301
+/private        /   301
