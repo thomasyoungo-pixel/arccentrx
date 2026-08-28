@@ -62,7 +62,7 @@
         '<a href="services.html#growth-strategy"><strong>Growth Strategy</strong><span>Growth built as a system</span></a>' +
         '<a href="services.html#technology-infrastructure"><strong>Technology Infrastructure</strong><span>Architecture that holds at scale</span></a>' +
         '<a href="services.html#operational-optimization"><strong>Operational Optimization</strong><span>Throughput, quality, and cost</span></a>' +
-        '<a href="services.html#ma-readiness"><strong>M&amp;A Readiness and Integration</strong><span>Diligence through integration</span></a>' +
+        '<a href="services.html#ma-readiness"><strong>M&amp;A Readiness and Integration</strong><span>Business Process Optimization</span></a>' +
         '<a href="services.html#compliance-governance"><strong>Compliance and Governance</strong><span>Audit readiness built in</span></a>' +
         '<a href="services.html#organizational-design"><strong>Organizational Design</strong><span>Structure, roles, decision rights</span></a>' +
         '<a href="services.html#reporting-analytics"><strong>Reporting and Analytics</strong><span>Numbers you can act on</span></a>' +
