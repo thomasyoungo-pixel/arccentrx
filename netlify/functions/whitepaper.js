@@ -27,12 +27,25 @@ const MONDAY_API = "https://api.monday.com/v2";
 const DEFAULT_BOARD_ID = "18431243427";
 
 exports.handler = async function (event) {
+  const token = process.env.MONDAY_API_TOKEN;
+  const boardId = process.env.MONDAY_WHITEPAPER_BOARD_ID || DEFAULT_BOARD_ID;
+
+  // TEMPORARY diagnostic: GET ?debug=1 returns the board's column metadata
+  // (ids/titles/types only, never the token or any lead data). Remove after use.
+  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.debug) {
+    if (!token) return json(500, { error: "Server not configured", hasToken: false });
+    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
+    try {
+      const cols = await getColumns(boardId, dh);
+      return json(200, { boardId: String(boardId), columns: cols });
+    } catch (e) {
+      return json(502, { error: "debug failed", detail: String(e) });
+    }
+  }
+
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
-
-  const token = process.env.MONDAY_API_TOKEN;
-  const boardId = process.env.MONDAY_WHITEPAPER_BOARD_ID || DEFAULT_BOARD_ID;
   if (!token) {
     console.error("MONDAY_API_TOKEN is not set");
     return json(500, { error: "Server not configured" });
