@@ -106,7 +106,7 @@
           '<a href="services.html#reporting-analytics">Reporting and Analytics</a>' +
         '</div>' +
         '<div class="footer-col"><h4>Resources</h4>' +
-          '<a href="blog.html">Blog</a><a href="whitepapers.html">White Papers</a><a href="contact.html">Get in touch</a>' +
+          '<a href="blog.html">Blog</a><a href="resources.html">Resources</a><a href="contact.html">Get in touch</a>' +
         '</div>' +
       '</div>' +
       '<div class="copyright">© <span data-year></span> ArcCentrx. All rights reserved.<span class="sep">·</span><a href="privacy.html">Privacy Policy</a><span class="sep">·</span><a href="terms.html">Terms of Service</a></div>' +

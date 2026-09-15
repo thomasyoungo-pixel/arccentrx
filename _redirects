@@ -9,3 +9,7 @@
 # WIP: keep the unfinished Private sub-site off the public site
 /private.html   /   301
 /private        /   301
+
+# White Papers page renamed to Resources
+/whitepapers.html   /resources.html   301
+/whitepapers        /resources.html   301
