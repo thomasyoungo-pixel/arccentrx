@@ -30,19 +30,6 @@ exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
   const boardId = process.env.MONDAY_WHITEPAPER_BOARD_ID || DEFAULT_BOARD_ID;
 
-  // TEMPORARY diagnostic: GET ?debug=1 returns the board's column metadata
-  // (ids/titles/types only, never the token or any lead data). Remove after use.
-  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.debug) {
-    if (!token) return json(500, { error: "Server not configured", hasToken: false });
-    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    try {
-      const cols = await getColumns(boardId, dh);
-      return json(200, { boardId: String(boardId), columns: cols });
-    } catch (e) {
-      return json(502, { error: "debug failed", detail: String(e) });
-    }
-  }
-
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
@@ -89,21 +76,37 @@ exports.handler = async function (event) {
 
     const columnValues = {};
 
-    // Email -> "Email" column (or any email-type column); defaults to lead_email.
+    // Only ever write to columns that actually exist on the board, formatted by
+    // the column's real type. This board's Email/Company are plain text columns,
+    // so a text value (not the email-object format) is what Monday expects.
+
+    // Email -> "Email" column (email-type column preferred, else a text column).
     const emailCol = findCol(cols, { id: process.env.MONDAY_WP_EMAIL_COLUMN_ID, title: "Email", type: "email" });
-    const emailColId = (emailCol && emailCol.id) || process.env.MONDAY_WP_EMAIL_COLUMN_ID || "lead_email";
-    columnValues[emailColId] = { email: email, text: email };
+    if (emailCol && email) {
+      columnValues[emailCol.id] = colValue(emailCol.type, email);
+    }
+
+    // Requester Name -> "Requester Name" column, if one exists.
+    const reqNameCol = findCol(cols, { title: "Requester Name" });
+    if (reqNameCol && name) {
+      columnValues[reqNameCol.id] = colValue(reqNameCol.type, name);
+    }
 
     // Company -> "Company" column, if one exists.
     const companyCol = findCol(cols, { id: process.env.MONDAY_WP_COMPANY_COLUMN_ID, title: "Company" });
     if (companyCol && company) {
-      columnValues[companyCol.id] = colTextValue(companyCol.type, company);
+      columnValues[companyCol.id] = colValue(companyCol.type, company);
     }
 
-    // Paper -> "Paper" column, if one exists.
+    // Paper -> "Paper" column if one exists, else the "Request Date" date column
+    // gets today's date so the board shows when each request came in.
     const paperCol = findCol(cols, { id: process.env.MONDAY_WP_PAPER_COLUMN_ID, title: "Paper" });
     if (paperCol && paper) {
-      columnValues[paperCol.id] = colTextValue(paperCol.type, paper);
+      columnValues[paperCol.id] = colValue(paperCol.type, paper);
+    }
+    const dateCol = findCol(cols, { title: "Request Date", type: "date" });
+    if (dateCol) {
+      columnValues[dateCol.id] = { date: new Date().toISOString().slice(0, 10) };
     }
 
     // 1) Create the item.
@@ -173,9 +176,14 @@ function findCol(cols, opts) {
   return null;
 }
 
-// Long Text columns take { text: "..." }; plain Text columns take a string.
-function colTextValue(type, text) {
-  return type === "long_text" ? { text: text } : text;
+// Format a value for Monday according to the column's actual type.
+//   email     -> { email, text }
+//   long_text -> { text }
+//   text/other-> plain string
+function colValue(type, value) {
+  if (type === "email") return { email: value, text: value };
+  if (type === "long_text") return { text: value };
+  return value;
 }
 
 async function gql(query, variables, headers) {
