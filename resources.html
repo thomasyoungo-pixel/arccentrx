@@ -35,12 +35,22 @@
   <div class="wp-grid">
     <article class="wp-card reveal">
       <div class="wp-card-top">
+        <span class="wp-quarter">Firm Overview</span>
+        <span class="wp-type">PDF</span>
+      </div>
+      <h3>ArcCentrx Firm Overview</h3>
+      <p>Who we are and how we operate: the team, the philosophy, and the way we partner with enterprise and mid-market leaders to turn strategy into results.</p>
+      <button class="btn btn-teal wp-download" data-paper="ArcCentrx Firm Overview" data-board="firm-overview" data-pdf="assets/whitepapers/arccentrx-firm-overview.pdf">Download the overview</button>
+    </article>
+
+    <article class="wp-card reveal" data-delay="1">
+      <div class="wp-card-top">
         <span class="wp-quarter">Services Overview</span>
         <span class="wp-type">PDF</span>
       </div>
       <h3>ArcCentrx Services Overview</h3>
       <p>A concise look at how we work: the services we bring to enterprise and mid-market teams, where we plug in, and the outcomes we drive across AI, technology infrastructure, growth, and operating strategy.</p>
-      <button class="btn btn-teal wp-download" data-paper="ArcCentrx Services Overview" data-pdf="assets/whitepapers/arccentrx-services-overview.pdf">Download the overview</button>
+      <button class="btn btn-teal wp-download" data-paper="ArcCentrx Services Overview" data-board="services-overview" data-pdf="assets/whitepapers/arccentrx-services-overview.pdf">Download the overview</button>
     </article>
   </div>
 </section>
@@ -113,10 +123,11 @@
   var emailRe = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   var lastFocus = null;
 
-  function openModal(paper, pdf) {
+  function openModal(paper, pdf, board) {
     if (!pdf) return;
     paperFld.value = paper || '';
     form.dataset.pdf = pdf;
+    form.dataset.board = board || '';
     if (paper) subFld.textContent = 'Tell us where to send "' + paper + '". We\'ll email you a copy and take you straight to the PDF.';
     form.reset();
     note.textContent = '';
@@ -143,7 +154,7 @@
 
   document.querySelectorAll('.wp-download').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      openModal(btn.getAttribute('data-paper'), btn.getAttribute('data-pdf'));
+      openModal(btn.getAttribute('data-paper'), btn.getAttribute('data-pdf'), btn.getAttribute('data-board'));
     });
   });
   modal.querySelectorAll('[data-wp-close]').forEach(function (el) {
@@ -172,7 +183,7 @@
     fetch('/.netlify/functions/whitepaper', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name, email: email, company: company, paper: paperFld.value })
+      body: JSON.stringify({ name: name, email: email, company: company, paper: paperFld.value, board: form.dataset.board })
     }).then(finish).catch(finish);
   });
 })();

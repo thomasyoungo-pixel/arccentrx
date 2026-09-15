@@ -13,9 +13,12 @@
  *   "Paper"    -> the white paper title (only if such a column exists)
  * Anything without a matching column still lands in the item's Updates.
  *
+ * Each resource routes to its own Monday board. The front end sends a short
+ * board slug (never a raw board id), which is mapped to an id server-side so
+ * the endpoint can only ever write to boards we've whitelisted here.
+ *
  * Environment variables (Netlify -> Site configuration -> Environment variables):
  *   MONDAY_API_TOKEN          (required)  Monday personal API token
- *   MONDAY_WHITEPAPER_BOARD_ID (optional) board id (defaults to the board below)
  *   MONDAY_WHITEPAPER_GROUP_ID (optional) group to create the item in
  *   MONDAY_WP_EMAIL_COLUMN_ID / MONDAY_WP_COMPANY_COLUMN_ID / MONDAY_WP_PAPER_COLUMN_ID
  *                             (optional)  force a specific column id
@@ -24,11 +27,17 @@
  */
 
 const MONDAY_API = "https://api.monday.com/v2";
-const DEFAULT_BOARD_ID = "18431243427";
+
+// Whitelisted boards, keyed by the slug the resource card sends. The first
+// entry is the default when a request arrives with no (or an unknown) slug.
+const BOARDS = {
+  "services-overview": "18431243427",
+  "firm-overview": "18431249717"
+};
+const DEFAULT_BOARD_SLUG = "services-overview";
 
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
-  const boardId = process.env.MONDAY_WHITEPAPER_BOARD_ID || DEFAULT_BOARD_ID;
 
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
@@ -44,6 +53,10 @@ exports.handler = async function (event) {
   } catch (e) {
     return json(400, { error: "Invalid JSON" });
   }
+
+  // Resolve the target board from the slug (falls back to the default board).
+  const boardSlug = (body.board || "").toString().trim();
+  const boardId = BOARDS[boardSlug] || BOARDS[DEFAULT_BOARD_SLUG];
 
   const name = (body.name || "").toString().trim().slice(0, 200);
   const email = (body.email || "").toString().trim().slice(0, 200);
