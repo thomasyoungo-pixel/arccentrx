@@ -9,6 +9,22 @@
 (function () {
   "use strict";
 
+  /* ---- Google Analytics (GA4) ----
+     Injected here so every page (current and future) is tracked from one
+     place. Loads the gtag library, then initializes with the property ID. */
+  (function () {
+    var GA_ID = "G-B1L7NFSWC8";
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag("js", new Date());
+    gtag("config", GA_ID);
+  })();
+
   /* ---- Brand marks (navy for header, reversed for footer) ---- */
   var LOGO_NAVY =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 278 70" aria-label="ArcCentrx service mark">' +
