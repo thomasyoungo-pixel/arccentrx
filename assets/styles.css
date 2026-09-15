@@ -652,7 +652,7 @@ section[id] { scroll-margin-top: 92px; }
 /* =========================================================================
    White papers (gated downloads)
    ========================================================================= */
-.wp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; max-width: var(--maxw); margin: 0 auto; }
+.wp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 380px)); justify-content: center; gap: 24px; max-width: var(--maxw); margin: 0 auto; }
 .wp-card { background: #fff; border: 1px solid var(--border-2); border-radius: var(--radius); padding: 30px 28px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
 .wp-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 .wp-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
