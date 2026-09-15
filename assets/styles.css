@@ -660,7 +660,7 @@ section[id] { scroll-margin-top: 92px; }
 .wp-type { color: var(--muted); font-weight: 600; font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; }
 .wp-card h3 { color: var(--navy); font-size: 19px; line-height: 1.3; margin-bottom: 12px; }
 .wp-card p { color: var(--body-soft); font-size: 15px; line-height: 1.65; margin-bottom: 24px; flex: 1; }
-.wp-card .btn { align-self: flex-start; }
+.wp-card .btn { align-self: center; }
 
 .wp-modal { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .wp-modal[hidden] { display: none; }
