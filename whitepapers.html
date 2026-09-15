@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ArcCentrx - White Papers</title>
+<meta name="description" content="Quarterly white papers from ArcCentrx on AI, technology infrastructure, growth, compliance, and operating strategy for enterprise and mid-market companies.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" sizes="any">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="whitepapers">
+<div data-site-header></div>
+
+<!-- ============================ HERO ============================ -->
+<section class="intro-band">
+  <div class="intro-inner">
+    <h1 class="reveal">White Papers</h1>
+    <p class="subhead reveal" data-delay="1">Quarterly research and points of view on the decisions that decide whether a business scales.</p>
+  </div>
+</section>
+
+<!-- ==================== PAPERS ==================== -->
+<section class="white">
+  <div class="section-heading reveal" style="max-width:720px;">
+    <span class="eyebrow">Latest</span>
+    <h2>Written by the people who have run it.</h2>
+    <p>Practical, operator-tested thinking you can put to work. Each paper is a short read, delivered straight to your inbox.</p>
+  </div>
+
+  <div class="wp-grid">
+    <!-- PLACEHOLDER PAPER: replace title, quarter, abstract, and data-pdf when the first paper is ready. -->
+    <article class="wp-card reveal">
+      <div class="wp-card-top">
+        <span class="wp-quarter">Q3 2026</span>
+        <span class="wp-type">White Paper</span>
+      </div>
+      <h3>Placeholder: the first quarterly white paper</h3>
+      <p>A short abstract goes here, one or two sentences on what the reader will learn and why it matters. This is placeholder copy until the first paper is ready to publish.</p>
+      <button class="btn btn-teal wp-download" data-paper="ArcCentrx Services Overview" data-pdf="assets/whitepapers/arccentrx-services-overview.pdf">Download the paper</button>
+    </article>
+  </div>
+</section>
+
+<!-- ============================ CTA ============================ -->
+<section class="cta-band">
+  <div class="section-inner reveal">
+    <h2>Want to talk it through?</h2>
+    <a class="btn btn-bright-teal" href="contact.html">Get in touch</a>
+  </div>
+</section>
+
+<!-- ==================== GATED DOWNLOAD MODAL ==================== -->
+<!-- Native form. On submit it POSTs to the Netlify function, which creates
+     the item on the Monday board (Monday's board automation then sends the
+     email). The visitor is redirected to the PDF regardless of the CRM write. -->
+<div class="wp-modal" id="wpModal" hidden>
+  <div class="wp-modal-overlay" data-wp-close></div>
+  <div class="wp-dialog" role="dialog" aria-modal="true" aria-labelledby="wpModalTitle">
+    <button class="wp-close" type="button" data-wp-close aria-label="Close">&times;</button>
+
+    <div class="wp-modal-form">
+      <span class="eyebrow">Free download</span>
+      <h2 id="wpModalTitle">Get the white paper</h2>
+      <p class="wp-modal-sub" id="wpModalSub">Tell us where to send it. We'll email you a copy and take you straight to the PDF.</p>
+      <form id="wpForm" novalidate>
+        <!-- Honeypot: hidden from humans; bots that fill it are silently dropped. -->
+        <input type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+        <input type="hidden" name="paper" id="wpPaper">
+        <div class="field">
+          <label for="wpName">Name</label>
+          <input id="wpName" name="name" type="text" placeholder="Your name" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="wpEmail">Work email *</label>
+          <input id="wpEmail" name="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="wpCompany">Company</label>
+          <input id="wpCompany" name="company" type="text" placeholder="Your company" autocomplete="organization">
+        </div>
+        <button class="btn btn-teal" type="submit">Download PDF</button>
+        <div class="form-note" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <div class="wp-modal-success" hidden>
+      <div class="wp-success-icon" aria-hidden="true">&check;</div>
+      <h2>Thanks, check your inbox.</h2>
+      <p>Your download is starting now, and we've sent a copy to your email.</p>
+      <a class="btn btn-teal" id="wpPdfLink" href="#" rel="noopener">Open the PDF</a>
+    </div>
+  </div>
+</div>
+
+<div data-site-footer></div>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var modal = document.getElementById('wpModal');
+  var form = document.getElementById('wpForm');
+  if (!modal || !form) return;
+
+  var formWrap = modal.querySelector('.wp-modal-form');
+  var success = modal.querySelector('.wp-modal-success');
+  var paperFld = document.getElementById('wpPaper');
+  var subFld = document.getElementById('wpModalSub');
+  var pdfLink = document.getElementById('wpPdfLink');
+  var note = form.querySelector('.form-note');
+  var emailRe = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  var lastFocus = null;
+
+  function openModal(paper, pdf) {
+    if (!pdf) return;
+    paperFld.value = paper || '';
+    form.dataset.pdf = pdf;
+    if (paper) subFld.textContent = 'Tell us where to send "' + paper + '". We\'ll email you a copy and take you straight to the PDF.';
+    form.reset();
+    note.textContent = '';
+    formWrap.hidden = false;
+    success.hidden = true;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    lastFocus = document.activeElement;
+    var first = form.querySelector('input[name="name"]');
+    if (first) first.focus();
+  }
+  function closeModal() {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function finish() {
+    var pdf = form.dataset.pdf;
+    formWrap.hidden = true;
+    success.hidden = false;
+    if (pdfLink) pdfLink.href = pdf;
+    setTimeout(function () { window.location.href = pdf; }, 1200);
+  }
+
+  document.querySelectorAll('.wp-download').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      openModal(btn.getAttribute('data-paper'), btn.getAttribute('data-pdf'));
+    });
+  });
+  modal.querySelectorAll('[data-wp-close]').forEach(function (el) {
+    el.addEventListener('click', closeModal);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) closeModal();
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    // Honeypot: a filled hidden field means a bot. Skip the CRM write but
+    // still hand over the PDF so the (rare) false positive isn't blocked.
+    if (form.company_website && form.company_website.value) { finish(); return; }
+
+    var name = form.name.value.trim();
+    var email = form.email.value.trim();
+    var company = form.company.value.trim();
+    if (!emailRe.test(email)) {
+      note.textContent = 'Please enter a valid email address.';
+      form.email.focus();
+      return;
+    }
+    note.textContent = 'One moment...';
+
+    fetch('/.netlify/functions/whitepaper', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, company: company, paper: paperFld.value })
+    }).then(finish).catch(finish);
+  });
+})();
+</script>
+</body>
+</html>
