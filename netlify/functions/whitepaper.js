@@ -32,7 +32,10 @@ const MONDAY_API = "https://api.monday.com/v2";
 // entry is the default when a request arrives with no (or an unknown) slug.
 const BOARDS = {
   "services-overview": "18431243427",
-  "firm-overview": "18431249717"
+  "firm-overview": "18431249717",
+  // TODO: point this at a dedicated fintech/landing-page board once created.
+  // Temporarily routed to the services board so the flow works end to end.
+  "industry-fintech": "18431243427"
 };
 const DEFAULT_BOARD_SLUG = "services-overview";
 
@@ -62,6 +65,8 @@ exports.handler = async function (event) {
   const email = (body.email || "").toString().trim().slice(0, 200);
   const company = (body.company || "").toString().trim().slice(0, 300);
   const paper = (body.paper || "").toString().trim().slice(0, 300);
+  const source = (body.source || "").toString().trim().slice(0, 200);
+  const sourceDetail = (body.sourceDetail || "").toString().trim().slice(0, 400);
 
   // Honeypot (in case the browser check is bypassed): silently accept and drop.
   if (body.company_website) {
@@ -122,6 +127,13 @@ exports.handler = async function (event) {
       columnValues[dateCol.id] = { date: new Date().toISOString().slice(0, 10) };
     }
 
+    // Source -> "Source" column, if one exists (where the lead came from:
+    // conference, outreach, ad). Always captured in the Updates note below.
+    const sourceCol = findCol(cols, { title: "Source" });
+    if (sourceCol && source) {
+      columnValues[sourceCol.id] = colValue(sourceCol.type, source);
+    }
+
     // 1) Create the item.
     const createQuery =
       "mutation ($board: ID!, $group: String, $name: String!, $cols: JSON) {" +
@@ -143,11 +155,13 @@ exports.handler = async function (event) {
 
     // 2) Post the full submission as an update on the item (belt-and-suspenders).
     const detail =
-      "White paper download request\n\n" +
+      "Download request\n\n" +
       "Name: " + (name || "(not given)") + "\n" +
       "Email: " + email +
       (company ? "\nCompany: " + company : "") +
-      (paper ? "\nPaper: " + paper : "");
+      (paper ? "\nPaper: " + paper : "") +
+      (source ? "\nSource: " + source : "") +
+      (sourceDetail ? "\nSource detail: " + sourceDetail : "");
 
     const updateQuery =
       "mutation ($item: ID!, $bodyText: String!) {" +
