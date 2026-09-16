@@ -40,20 +40,6 @@ const DEFAULT_BOARD_SLUG = "services-overview";
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
 
-  // TEMPORARY: GET ?tagcheck=<name>&slug=<slug> confirms tag lookup works.
-  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagcheck) {
-    if (!token) return json(500, { error: "Server not configured" });
-    const bId = BOARDS[event.queryStringParameters.slug] || BOARDS[DEFAULT_BOARD_SLUG];
-    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    try {
-      const q = "mutation ($name: String!, $board: ID) { create_or_get_tag (tag_name: $name, board_id: $board) { id name } }";
-      const r = await gql(q, { name: event.queryStringParameters.tagcheck, board: String(bId) }, dh);
-      return json(200, { boardId: String(bId), result: r.data });
-    } catch (e) {
-      return json(502, { error: "tagcheck failed", detail: String(e) });
-    }
-  }
-
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
