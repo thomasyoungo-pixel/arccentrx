@@ -33,14 +33,27 @@ const MONDAY_API = "https://api.monday.com/v2";
 const BOARDS = {
   "services-overview": "18431243427",
   "firm-overview": "18431249717",
-  // TODO: point this at a dedicated fintech/landing-page board once created.
-  // Temporarily routed to the services board so the flow works end to end.
-  "industry-fintech": "18431243427"
+  "industry-fintech": "18431386732"
 };
 const DEFAULT_BOARD_SLUG = "services-overview";
 
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
+
+  // TEMPORARY diagnostic: GET ?debug=<slug> returns that board's column
+  // metadata (ids/titles/types only). Remove after confirming the mapping.
+  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.debug) {
+    if (!token) return json(500, { error: "Server not configured" });
+    const slug = event.queryStringParameters.debug;
+    const bId = BOARDS[slug] || BOARDS[DEFAULT_BOARD_SLUG];
+    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
+    try {
+      const cols = await getColumns(bId, dh);
+      return json(200, { slug: slug, boardId: String(bId), columns: cols });
+    } catch (e) {
+      return json(502, { error: "debug failed", detail: String(e) });
+    }
+  }
 
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
