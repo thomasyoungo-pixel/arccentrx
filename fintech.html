@@ -24,13 +24,52 @@
 <div data-site-header></div>
 
 <!-- ============================ HERO ============================ -->
-<section class="intro-band">
-  <div class="intro-inner">
-    <!-- SWAP: hero eyebrow / headline / subhead -->
-    <span class="eyebrow reveal" style="color:var(--teal-bright);">Fintech</span>
-    <h1 class="reveal" data-delay="1">Built to scale in a business that punishes getting it wrong.</h1>
-    <p class="subhead reveal" data-delay="2">Payments, ledgers, KYC, and compliance decide whether a fintech scales or stalls. We help you make those calls, and we stay through the build.</p>
-    <button class="btn btn-bright-teal reveal wp-download" data-delay="3" data-paper="ArcCentrx Fintech Brief" data-board="industry-fintech" data-pdf="assets/industries/fintech-brief.pdf">Get the fintech brief</button>
+<!-- The lead form lives inline on the right. It posts to the Netlify function
+     (creates the lead on the industry Monday board, passes the traffic source),
+     then redirects the visitor to the PDF regardless of the CRM write.
+     SWAP the three data-* attributes on #lpForm for another vertical. -->
+<section class="intro-band lp">
+  <div class="lp-grid">
+    <div class="lp-copy">
+      <!-- SWAP: hero eyebrow / headline / subhead -->
+      <span class="eyebrow reveal" style="color:var(--teal-bright);">Fintech</span>
+      <h1 class="reveal" data-delay="1">Built to scale in a business that punishes getting it wrong.</h1>
+      <p class="subhead reveal" data-delay="2">Payments, ledgers, KYC, and compliance decide whether a fintech scales or stalls. We help you make those calls, and we stay through the build.</p>
+    </div>
+
+    <div class="lp-form-card reveal" data-delay="2" id="leadForm">
+      <div class="lp-form-body">
+        <span class="eyebrow">Free download</span>
+        <!-- SWAP: form heading + subtext -->
+        <h2>Get the fintech brief</h2>
+        <p class="lp-form-sub">The questions we ask before touching a fintech stack, and how we answer them. We'll email you a copy and open the PDF.</p>
+        <!-- SWAP the three data-* attributes for another vertical -->
+        <form id="lpForm" novalidate data-paper="ArcCentrx Fintech Brief" data-board="industry-fintech" data-pdf="assets/industries/fintech-brief.pdf">
+          <input type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <div class="field">
+            <label for="lpName">Name</label>
+            <input id="lpName" name="name" type="text" placeholder="Your name" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="lpEmail">Work email *</label>
+            <input id="lpEmail" name="email" type="email" placeholder="you@company.com" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="lpCompany">Company</label>
+            <input id="lpCompany" name="company" type="text" placeholder="Your company" autocomplete="organization">
+          </div>
+          <button class="btn btn-teal" type="submit">Get the brief</button>
+          <div class="form-note" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+
+      <div class="lp-form-success" hidden>
+        <div class="wp-success-icon" aria-hidden="true">&check;</div>
+        <h2>Thanks, check your inbox.</h2>
+        <p>Your download is starting now, and we've sent a copy to your email.</p>
+        <a class="btn btn-teal" id="lpPdfLink" href="#" rel="noopener">Open the PDF</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -108,7 +147,7 @@
     <!-- SWAP: offer title + description + button label -->
     <h2>The fintech operator's brief</h2>
     <p>The questions we ask before touching a fintech stack, and how we answer them. A short read, sent straight to your inbox.</p>
-    <button class="btn btn-teal wp-download" data-paper="ArcCentrx Fintech Brief" data-board="industry-fintech" data-pdf="assets/industries/fintech-brief.pdf">Get the fintech brief</button>
+    <a class="btn btn-teal" href="#leadForm" data-scroll-form>Get the fintech brief</a>
   </div>
 </section>
 
@@ -120,64 +159,23 @@
   </div>
 </section>
 
-<!-- ==================== GATED DOWNLOAD MODAL ==================== -->
-<!-- Native form. On submit it POSTs to the Netlify function (which creates
-     the lead on the industry's Monday board and passes the traffic source),
-     then redirects the visitor to the PDF regardless of the CRM write. -->
-<div class="wp-modal" id="wpModal" hidden>
-  <div class="wp-modal-overlay" data-wp-close></div>
-  <div class="wp-dialog" role="dialog" aria-modal="true" aria-labelledby="wpModalTitle">
-    <button class="wp-close" type="button" data-wp-close aria-label="Close">&times;</button>
-
-    <div class="wp-modal-form">
-      <span class="eyebrow">Free download</span>
-      <h2 id="wpModalTitle">Get the brief</h2>
-      <p class="wp-modal-sub" id="wpModalSub">Tell us where to send it. We'll email you a copy and take you straight to the PDF.</p>
-      <form id="wpForm" novalidate>
-        <input type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-        <input type="hidden" name="paper" id="wpPaper">
-        <div class="field">
-          <label for="wpName">Name</label>
-          <input id="wpName" name="name" type="text" placeholder="Your name" autocomplete="name">
-        </div>
-        <div class="field">
-          <label for="wpEmail">Work email *</label>
-          <input id="wpEmail" name="email" type="email" placeholder="you@company.com" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="wpCompany">Company</label>
-          <input id="wpCompany" name="company" type="text" placeholder="Your company" autocomplete="organization">
-        </div>
-        <button class="btn btn-teal" type="submit">Download PDF</button>
-        <div class="form-note" role="status" aria-live="polite"></div>
-      </form>
-    </div>
-
-    <div class="wp-modal-success" hidden>
-      <div class="wp-success-icon" aria-hidden="true">&check;</div>
-      <h2>Thanks, check your inbox.</h2>
-      <p>Your download is starting now, and we've sent a copy to your email.</p>
-      <a class="btn btn-teal" id="wpPdfLink" href="#" rel="noopener">Open the PDF</a>
-    </div>
-  </div>
-</div>
-
 <div data-site-footer></div>
 <script src="assets/site.js"></script>
 <script>
 (function () {
-  var modal = document.getElementById('wpModal');
-  var form = document.getElementById('wpForm');
-  if (!modal || !form) return;
+  var card = document.getElementById('leadForm');
+  var form = document.getElementById('lpForm');
+  if (!card || !form) return;
 
-  var formWrap = modal.querySelector('.wp-modal-form');
-  var success = modal.querySelector('.wp-modal-success');
-  var paperFld = document.getElementById('wpPaper');
-  var subFld = document.getElementById('wpModalSub');
-  var pdfLink = document.getElementById('wpPdfLink');
+  var body = card.querySelector('.lp-form-body');
+  var success = card.querySelector('.lp-form-success');
+  var pdfLink = document.getElementById('lpPdfLink');
   var note = form.querySelector('.form-note');
   var emailRe = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-  var lastFocus = null;
+
+  var paper = form.getAttribute('data-paper') || '';
+  var board = form.getAttribute('data-board') || '';
+  var pdf = form.getAttribute('data-pdf') || '';
 
   // ---- Traffic source: read UTM params once so the lead records where it
   // came from (conference, outreach, ad). Falls back to the referrer host,
@@ -193,46 +191,24 @@
   }
   var sourceDetail = [utmSource, utmMedium, utmCampaign].filter(Boolean).join(' / ');
 
-  function openModal(paper, pdf) {
-    if (!pdf) return;
-    paperFld.value = paper || '';
-    form.dataset.pdf = pdf;
-    if (paper) subFld.textContent = 'Tell us where to send "' + paper + '". We\'ll email you a copy and take you straight to the PDF.';
-    form.reset();
-    note.textContent = '';
-    formWrap.hidden = false;
-    success.hidden = true;
-    modal.hidden = false;
-    document.body.style.overflow = 'hidden';
-    lastFocus = document.activeElement;
-    var first = form.querySelector('input[name="name"]');
-    if (first) first.focus();
-  }
-  function closeModal() {
-    modal.hidden = true;
-    document.body.style.overflow = '';
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
-  }
-  function finish() {
-    var pdf = form.dataset.pdf;
-    formWrap.hidden = true;
-    success.hidden = false;
-    if (pdfLink) pdfLink.href = pdf;
-    setTimeout(function () { window.location.href = pdf; }, 1200);
-  }
-
-  document.querySelectorAll('.wp-download').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      openModal(btn.getAttribute('data-paper'), btn.getAttribute('data-pdf'));
-      form.dataset.board = btn.getAttribute('data-board') || '';
+  // Secondary CTA lower on the page scrolls up to the form and focuses it.
+  document.querySelectorAll('[data-scroll-form]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var first = form.querySelector('input[name="name"]');
+      if (first) setTimeout(function () { first.focus(); }, 400);
     });
   });
-  modal.querySelectorAll('[data-wp-close]').forEach(function (el) {
-    el.addEventListener('click', closeModal);
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !modal.hidden) closeModal();
-  });
+
+  function finish() {
+    if (pdf) {
+      if (pdfLink) pdfLink.href = pdf;
+      setTimeout(function () { window.location.href = pdf; }, 1200);
+    }
+    body.hidden = true;
+    success.hidden = false;
+  }
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -253,7 +229,7 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: name, email: email, company: company,
-        paper: paperFld.value, board: form.dataset.board,
+        paper: paper, board: board,
         source: source, sourceDetail: sourceDetail
       })
     }).then(finish).catch(finish);

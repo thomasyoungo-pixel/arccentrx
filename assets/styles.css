@@ -652,6 +652,33 @@ section[id] { scroll-margin-top: 92px; }
 /* =========================================================================
    White papers (gated downloads)
    ========================================================================= */
+/* Landing-page hero with an inline lead form on the right. */
+.intro-band.lp { text-align: left; }
+.intro-band.lp .lp-grid {
+  position: relative; display: grid; grid-template-columns: 1.05fr .95fr;
+  gap: clamp(32px, 5vw, 60px); max-width: var(--maxw); margin: 0 auto; align-items: center;
+}
+.intro-band.lp .lp-copy h1 { margin: 0 0 16px; max-width: 560px; }
+.intro-band.lp .lp-copy .subhead { margin: 0; max-width: 520px; }
+.intro-band.lp .lp-copy .eyebrow { display: block; margin-bottom: 14px; }
+.lp-form-card {
+  background: #fff; border-radius: 16px; padding: clamp(24px, 2.6vw, 34px);
+  box-shadow: var(--shadow-lg); color: var(--body); text-align: left;
+}
+.lp-form-card .eyebrow { color: var(--teal-deep); }
+.lp-form-card h2 { color: var(--navy); font-size: clamp(20px, 2.4vw, 24px); margin: 6px 0 8px; }
+.lp-form-sub { color: var(--body-soft); font-size: 14.5px; line-height: 1.6; margin-bottom: 20px; }
+.lp-form-card form .btn { width: 100%; margin-top: 4px; }
+.lp-form-success { text-align: center; padding: 12px 0; }
+.lp-form-success .wp-success-icon { margin: 0 auto 16px; }
+.lp-form-success h2 { margin-bottom: 8px; }
+.lp-form-success p { color: var(--body-soft); font-size: 14.5px; line-height: 1.6; margin-bottom: 20px; }
+.lp-form-success .btn { width: 100%; }
+@media (max-width: 860px) {
+  .intro-band.lp .lp-grid { grid-template-columns: 1fr; gap: 30px; }
+  .intro-band.lp .lp-copy h1, .intro-band.lp .lp-copy .subhead { max-width: none; }
+}
+
 .wp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 380px)); justify-content: center; gap: 24px; max-width: var(--maxw); margin: 0 auto; }
 .wp-card { background: #fff; border: 1px solid var(--border-2); border-radius: var(--radius); padding: 30px 28px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
 .wp-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
