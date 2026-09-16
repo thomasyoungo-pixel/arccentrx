@@ -65,6 +65,7 @@ exports.handler = async function (event) {
   const paper = (body.paper || "").toString().trim().slice(0, 300);
   const source = (body.source || "").toString().trim().slice(0, 200);
   const sourceDetail = (body.sourceDetail || "").toString().trim().slice(0, 400);
+  const tag = (body.tag || "").toString().trim().slice(0, 60);
 
   // Honeypot (in case the browser check is bypassed): silently accept and drop.
   if (body.company_website) {
@@ -132,6 +133,23 @@ exports.handler = async function (event) {
     const sourceCol = findCol(cols, { title: "Source" });
     if (sourceCol && source) {
       columnValues[sourceCol.id] = colValue(sourceCol.type, source);
+    }
+
+    // Tag -> "Tags" column, if one exists. Tags need an id, so look the tag up
+    // (creating it if new) and apply its id. The industry page sends "Fintech".
+    const tagsCol = findCol(cols, { title: "Tags", type: "tags" });
+    if (tagsCol && tag) {
+      try {
+        const tagQuery =
+          "mutation ($name: String!, $board: ID) {" +
+          "  create_or_get_tag (tag_name: $name, board_id: $board) { id }" +
+          "}";
+        const tagRes = await gql(tagQuery, { name: tag, board: String(boardId) }, headers);
+        const tagId = tagRes && tagRes.data && tagRes.data.create_or_get_tag && tagRes.data.create_or_get_tag.id;
+        if (tagId) columnValues[tagsCol.id] = { tag_ids: [Number(tagId)] };
+      } catch (e) {
+        console.error("create_or_get_tag failed (skipping tag)", e);
+      }
     }
 
     // 1) Create the item.

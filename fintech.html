@@ -44,7 +44,7 @@
         <h2>Get the fintech brief</h2>
         <p class="lp-form-sub">The questions we ask before touching a fintech stack, and how we answer them. We'll email you a copy and open the PDF.</p>
         <!-- SWAP the three data-* attributes for another vertical -->
-        <form id="lpForm" novalidate data-paper="ArcCentrx Fintech Brief" data-board="industry-fintech" data-pdf="assets/industries/fintech-brief.pdf">
+        <form id="lpForm" novalidate data-paper="ArcCentrx Fintech Brief" data-board="industry-fintech" data-tag="Fintech" data-pdf="assets/industries/fintech-brief.pdf">
           <input type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
           <div class="field">
             <label for="lpName">Name</label>
@@ -176,6 +176,7 @@
   var paper = form.getAttribute('data-paper') || '';
   var board = form.getAttribute('data-board') || '';
   var pdf = form.getAttribute('data-pdf') || '';
+  var tag = form.getAttribute('data-tag') || '';
 
   // ---- Traffic source: read UTM params once so the lead records where it
   // came from (conference, outreach, ad). Falls back to the referrer host,
@@ -229,7 +230,7 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: name, email: email, company: company,
-        paper: paper, board: board,
+        paper: paper, board: board, tag: tag,
         source: source, sourceDetail: sourceDetail
       })
     }).then(finish).catch(finish);
