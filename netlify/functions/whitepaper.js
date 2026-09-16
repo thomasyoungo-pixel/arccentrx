@@ -40,21 +40,6 @@ const DEFAULT_BOARD_SLUG = "services-overview";
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
 
-  // TEMPORARY diagnostic: GET ?debug=<slug> returns that board's column
-  // metadata (ids/titles/types only). Remove after confirming the mapping.
-  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.debug) {
-    if (!token) return json(500, { error: "Server not configured" });
-    const slug = event.queryStringParameters.debug;
-    const bId = BOARDS[slug] || BOARDS[DEFAULT_BOARD_SLUG];
-    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    try {
-      const cols = await getColumns(bId, dh);
-      return json(200, { slug: slug, boardId: String(bId), columns: cols });
-    } catch (e) {
-      return json(502, { error: "debug failed", detail: String(e) });
-    }
-  }
-
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
@@ -117,8 +102,10 @@ exports.handler = async function (event) {
       columnValues[emailCol.id] = colValue(emailCol.type, email);
     }
 
-    // Requester Name -> "Requester Name" column, if one exists.
-    const reqNameCol = findCol(cols, { title: "Requester Name" });
+    // Requester name -> a text column titled "Requester Name" or "Name"
+    // (never the built-in name-type column, which is the item title).
+    const reqNameCol = findCol(cols, { title: "Requester Name" }) ||
+      cols.find(function (c) { return c.type === "text" && /^name$/i.test(c.title || ""); });
     if (reqNameCol && name) {
       columnValues[reqNameCol.id] = colValue(reqNameCol.type, name);
     }
@@ -150,7 +137,7 @@ exports.handler = async function (event) {
     // 1) Create the item.
     const createQuery =
       "mutation ($board: ID!, $group: String, $name: String!, $cols: JSON) {" +
-      "  create_item (board_id: $board, group_id: $group, item_name: $name, column_values: $cols) { id }" +
+      "  create_item (board_id: $board, group_id: $group, item_name: $name, column_values: $cols, create_labels_if_missing: true) { id }" +
       "}";
     const created = await gql(createQuery, {
       board: String(boardId),
@@ -219,10 +206,14 @@ function findCol(cols, opts) {
 // Format a value for Monday according to the column's actual type.
 //   email     -> { email, text }
 //   long_text -> { text }
+//   dropdown  -> { labels: [value] }   (pair with create_labels_if_missing)
+//   status    -> { label: value }      (pair with create_labels_if_missing)
 //   text/other-> plain string
 function colValue(type, value) {
   if (type === "email") return { email: value, text: value };
   if (type === "long_text") return { text: value };
+  if (type === "dropdown") return { labels: [value] };
+  if (type === "status" || type === "color") return { label: value };
   return value;
 }
 
