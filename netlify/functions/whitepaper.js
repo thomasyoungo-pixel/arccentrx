@@ -33,7 +33,10 @@ const MONDAY_API = "https://api.monday.com/v2";
 const BOARDS = {
   "services-overview": "18431243427",
   "firm-overview": "18431249717",
-  "industry-fintech": "18431386732"
+  "industry-fintech": "18431386732",
+  // TODO: point this at a dedicated credit-unions board once created.
+  // Temporarily routed to the services board so the flow works end to end.
+  "industry-credit-unions": "18431243427"
 };
 const DEFAULT_BOARD_SLUG = "services-overview";
 
