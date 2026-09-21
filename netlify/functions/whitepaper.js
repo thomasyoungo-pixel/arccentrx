@@ -66,6 +66,7 @@ exports.handler = async function (event) {
   const source = (body.source || "").toString().trim().slice(0, 200);
   const sourceDetail = (body.sourceDetail || "").toString().trim().slice(0, 400);
   const tag = (body.tag || "").toString().trim().slice(0, 60);
+  const message = (body.message || "").toString().trim().slice(0, 5000);
 
   // Honeypot (in case the browser check is bypassed): silently accept and drop.
   if (body.company_website) {
@@ -123,6 +124,12 @@ exports.handler = async function (event) {
     if (paperCol && paper) {
       columnValues[paperCol.id] = colValue(paperCol.type, paper);
     }
+
+    // Message -> "Message" column, if one exists. Always captured in Updates.
+    const messageCol = findCol(cols, { title: "Message" });
+    if (messageCol && message) {
+      columnValues[messageCol.id] = colValue(messageCol.type, message);
+    }
     const dateCol = findCol(cols, { title: "Request Date", type: "date" });
     if (dateCol) {
       columnValues[dateCol.id] = { date: new Date().toISOString().slice(0, 10) };
@@ -173,13 +180,14 @@ exports.handler = async function (event) {
 
     // 2) Post the full submission as an update on the item (belt-and-suspenders).
     const detail =
-      "Download request\n\n" +
+      (message ? "Contact request" : "Download request") + "\n\n" +
       "Name: " + (name || "(not given)") + "\n" +
       "Email: " + email +
       (company ? "\nCompany: " + company : "") +
       (paper ? "\nPaper: " + paper : "") +
       (source ? "\nSource: " + source : "") +
-      (sourceDetail ? "\nSource detail: " + sourceDetail : "");
+      (sourceDetail ? "\nSource detail: " + sourceDetail : "") +
+      (message ? "\n\nMessage:\n" + message : "");
 
     const updateQuery =
       "mutation ($item: ID!, $bodyText: String!) {" +
