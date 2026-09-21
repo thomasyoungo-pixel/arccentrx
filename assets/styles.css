@@ -646,7 +646,7 @@ section[id] { scroll-margin-top: 92px; }
   outline: none; border-color: var(--teal); background: #fff;
   box-shadow: 0 0 0 3px rgba(29,158,117,.14);
 }
-.field textarea { min-height: 130px; resize: vertical; }
+.field textarea { min-height: 130px; resize: vertical; white-space: pre-wrap; overflow-wrap: break-word; overflow-x: hidden; }
 .form-note { font-size: 13px; color: var(--teal-deep); margin-top: 14px; min-height: 18px; font-weight: 500; }
 
 /* =========================================================================
