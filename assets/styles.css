@@ -369,6 +369,10 @@ section.white { background: var(--bg); }
    ========================================================================= */
 .cards-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: var(--maxw); margin: 0 auto; }
 .cards-row.cols-2 { grid-template-columns: repeat(2, 1fr); max-width: 760px; }
+/* Short label cards: wrap in centered rows so a partial last row sits in the middle. */
+.cards-row.center-wrap { display: flex; flex-wrap: wrap; justify-content: center; }
+.cards-row.center-wrap > .card { flex: 0 1 calc((100% - 48px) / 3); justify-content: center; }
+@media (max-width: 900px) { .cards-row.center-wrap > .card { flex-basis: 100%; } }
 .card {
   background: #fff;
   border: 1px solid var(--border-2);
