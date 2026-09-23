@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ArcCentrx Services Overview</title>
+<!-- Trackable PDF link: records the visit in GA4, then opens the PDF.
+     Share this URL (optionally with UTM params) instead of the raw PDF path. -->
+<noscript><meta http-equiv="refresh" content="0; url=/assets/whitepapers/arccentrx-services-overview.pdf"></noscript>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B1L7NFSWC8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-B1L7NFSWC8');
+
+  var target = '/assets/whitepapers/arccentrx-services-overview.pdf';
+  var done = false;
+  function go() { if (done) return; done = true; window.location.replace(target); }
+  gtag('event', 'file_download', {
+    file_name: 'arccentrx-services-overview.pdf',
+    file_extension: 'pdf',
+    link_url: target,
+    link_text: 'ArcCentrx Services Overview',
+    transport_type: 'beacon',
+    event_callback: go
+  });
+  // Open the PDF even if analytics is blocked or slow.
+  setTimeout(go, 1500);
+</script>
+<style>body{font-family:Inter,system-ui,sans-serif;color:#1B2A4A;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;padding:24px;text-align:center}a{color:#1D9E75}</style>
+</head>
+<body>
+<p>Opening the ArcCentrx Services Overview&hellip; <a href="/assets/whitepapers/arccentrx-services-overview.pdf">Open it now</a></p>
+</body>
+</html>

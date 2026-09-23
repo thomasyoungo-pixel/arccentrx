@@ -13,3 +13,7 @@
 # White Papers page renamed to Resources
 /whitepapers.html   /resources.html   301
 /whitepapers        /resources.html   301
+
+# Trackable PDF links (log a GA4 download, then open the PDF)
+/go/services-overview   /go/services-overview.html   200
+/go/firm-overview       /go/firm-overview.html       200
