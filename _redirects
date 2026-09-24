@@ -17,3 +17,4 @@
 # Trackable PDF links (log a GA4 download, then open the PDF)
 /go/services-overview   /go/services-overview.html   200
 /go/firm-overview       /go/firm-overview.html       200
+/go/mike-podcast-guest  /go/mike-podcast-guest.html  200
