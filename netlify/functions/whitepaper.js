@@ -46,6 +46,26 @@ const DEFAULT_BOARD_SLUG = "services-overview";
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
 
+  // TEMPORARY: GET ?tagdebug=1 diagnoses tag lookup on Website Leads and reads
+  // the Tags value of the TEST rows only. Remove once tagging is fixed.
+  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagdebug) {
+    if (!token) return json(500, { error: "Server not configured" });
+    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
+    const out = { lookups: {}, testRows: null };
+    const tq = "mutation ($name: String!, $board: ID) { create_or_get_tag (tag_name: $name, board_id: $board) { id name } }";
+    for (const n of ["Fintech", "Healthcare", "CreditUnions", "Credit Unions", "ContactUs"]) {
+      const withBoard = await gql(tq, { name: n, board: WEBSITE_LEADS }, dh).catch(e => ({ thrown: String(e) }));
+      const noBoard = await gql(tq, { name: n }, dh).catch(e => ({ thrown: String(e) }));
+      out.lookups[n] = { withBoard: withBoard.data || withBoard.errors || withBoard, noBoard: noBoard.data || noBoard.errors || noBoard };
+    }
+    const iq = "query ($b: [ID!]) { boards (ids: $b) { items_page (limit: 100) { items { name column_values (ids: [\"tag_mm77crcb\"]) { value text } } } } }";
+    const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh).catch(e => ({ thrown: String(e) }));
+    try {
+      out.testRows = ir.data.boards[0].items_page.items.filter(i => /^TEST /.test(i.name));
+    } catch (e) { out.testRows = ir.errors || ir; }
+    return json(200, out);
+  }
+
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
