@@ -46,6 +46,19 @@ const DEFAULT_BOARD_SLUG = "services-overview";
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
 
+  // TEMPORARY: GET ?tagcheck=1 reads the Tags value of rows named "TEST ..."
+  // on Website Leads (no other lead data). Remove after verification.
+  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagcheck) {
+    if (!token) return json(500, { error: "Server not configured" });
+    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
+    const iq = "query ($b: [ID!]) { boards (ids: $b) { items_page (limit: 200) { items { name column_values (ids: [\"tag_mm77crcb\"]) { text } } } } }";
+    const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh);
+    const rows = ((ir.data && ir.data.boards[0].items_page.items) || [])
+      .filter(function (i) { return /^TEST /.test(i.name); })
+      .map(function (i) { return { name: i.name, tags: i.column_values[0].text || "" }; });
+    return json(200, { check: "tagcheck-1", rows: rows });
+  }
+
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
