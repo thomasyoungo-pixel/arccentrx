@@ -51,12 +51,26 @@ exports.handler = async function (event) {
   if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagcheck) {
     if (!token) return json(500, { error: "Server not configured" });
     const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    const iq = "query ($b: [ID!]) { boards (ids: $b) { items_page (limit: 200) { items { name column_values (ids: [\"tag_mm77crcb\"]) { text } } } } }";
+    const iq = "query ($b: [ID!]) { tags { id name } boards (ids: $b) { board_kind tags { id name } items_page (limit: 200) { items { name column_values (ids: [\"tag_mm77crcb\"]) { text value } } } } }";
     const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh);
-    const rows = ((ir.data && ir.data.boards[0].items_page.items) || [])
-      .filter(function (i) { return /^TEST /.test(i.name); })
-      .map(function (i) { return { name: i.name, tags: i.column_values[0].text || "" }; });
-    return json(200, { check: "tagcheck-1", rows: rows });
+    const board = ir.data && ir.data.boards[0];
+    const items = (board && board.items_page.items) || [];
+    const rows = items
+      .filter(function (i) { return /^TEST final/.test(i.name); })
+      .map(function (i) { return { name: i.name, tags: i.column_values[0].text || "", value: i.column_values[0].value }; });
+    // Tag ids used on real (non-TEST) rows, counted only: shows what the UI attaches.
+    const used = {};
+    items.filter(function (i) { return !/^TEST /.test(i.name); }).forEach(function (i) {
+      const v = i.column_values[0].value; if (!v) return;
+      (JSON.parse(v).tag_ids || []).forEach(function (t) { used[t] = (used[t] || 0) + 1; });
+    });
+    const wanted = /fintech|health|credit|contact/i;
+    return json(200, {
+      check: "tagcheck-2", boardKind: board && board.board_kind,
+      boardTags: board && board.tags,
+      accountTags: ((ir.data && ir.data.tags) || []).filter(function (t) { return wanted.test(t.name); }),
+      tagIdsOnRealRows: used, rows: rows, errors: ir.errors
+    });
   }
 
   if (event.httpMethod !== "POST") {
