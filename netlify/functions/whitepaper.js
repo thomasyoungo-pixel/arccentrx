@@ -51,7 +51,7 @@ exports.handler = async function (event) {
   if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagcheck) {
     if (!token) return json(500, { error: "Server not configured" });
     const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    const iq = "query ($b: [ID!]) { tags { id name } boards (ids: $b) { board_kind tags { id name } items_page (limit: 200) { items { name column_values (ids: [\"tag_mm77crcb\"]) { text value } } } } }";
+    const iq = "query ($b: [ID!]) { tags { id name } boards (ids: $b) { board_kind columns { id title type settings_str } tags { id name } items_page (limit: 200) { items { name column_values (ids: [\"tag_mm77crcb\"]) { text value } } } } }";
     const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh);
     const board = ir.data && ir.data.boards[0];
     const items = (board && board.items_page.items) || [];
@@ -66,7 +66,8 @@ exports.handler = async function (event) {
     });
     const wanted = /fintech|health|credit|contact/i;
     return json(200, {
-      check: "tagcheck-2", boardKind: board && board.board_kind,
+      check: "tagcheck-3", boardKind: board && board.board_kind,
+      sourceColumns: board && board.columns.filter(function (c) { return /source/i.test(c.title); }),
       boardTags: board && board.tags,
       accountTags: ((ir.data && ir.data.tags) || []).filter(function (t) { return wanted.test(t.name); }),
       tagIdsOnRealRows: used, rows: rows, errors: ir.errors
