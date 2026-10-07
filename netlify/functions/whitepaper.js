@@ -36,7 +36,10 @@ const BOARDS = {
   "industry-fintech": "18431386732",
   // TODO: point this at a dedicated credit-unions board once created.
   // Temporarily routed to the services board so the flow works end to end.
-  "industry-credit-unions": "18431243427"
+  "industry-credit-unions": "18431243427",
+  // TODO: point this at a dedicated healthcare board once created.
+  // Temporarily routed to the services board so the flow works end to end.
+  "industry-healthcare": "18431243427"
 };
 const DEFAULT_BOARD_SLUG = "services-overview";
 
