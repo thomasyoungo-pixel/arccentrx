@@ -46,6 +46,16 @@ const DEFAULT_BOARD_SLUG = "services-overview";
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
 
+  // TEMPORARY: GET ?debug=1 returns the leads board's columns and tag names
+  // (ids/titles/types only, no lead data). Remove after confirming mapping.
+  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.debug) {
+    if (!token) return json(500, { error: "Server not configured" });
+    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
+    const q = "query ($b: [ID!]) { boards (ids: $b) { name columns { id title type } tags { id name } } }";
+    const r = await gql(q, { b: ["18431243427"] }, dh);
+    return json(200, r.data || r);
+  }
+
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
