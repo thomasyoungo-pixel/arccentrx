@@ -46,38 +46,6 @@ const DEFAULT_BOARD_SLUG = "services-overview";
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
 
-  // TEMPORARY: GET ?tagcheck=1 reads the Tags value of rows named "TEST ..."
-  // on Website Leads (no other lead data). Remove after verification.
-  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagcheck) {
-    if (!token) return json(500, { error: "Server not configured" });
-    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    const iq = "query ($b: [ID!]) { tags { id name } boards (ids: $b) { board_kind columns { id title type settings_str } tags { id name } items_page (limit: 200) { items { name column_values (ids: [\"tag_mm77crcb\", \"dropdown_mm7x19ra\"]) { id text value } } } } }";
-    const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh);
-    const board = ir.data && ir.data.boards[0];
-    const items = (board && board.items_page.items) || [];
-    const rows = items
-      .filter(function (i) { return /^TEST source/.test(i.name); })
-      .map(function (i) {
-        const cv = {}; i.column_values.forEach(function (c) { cv[c.id] = c.text || ""; });
-        return { name: i.name, tags: cv.tag_mm77crcb, source: cv.dropdown_mm7x19ra };
-      });
-    // Tag ids used on real (non-TEST) rows, counted only: shows what the UI attaches.
-    const used = {};
-    items.filter(function (i) { return !/^TEST /.test(i.name); }).forEach(function (i) {
-      const tc = i.column_values.filter(function (c) { return c.id === "tag_mm77crcb"; })[0];
-      const v = tc && tc.value; if (!v) return;
-      (JSON.parse(v).tag_ids || []).forEach(function (t) { used[t] = (used[t] || 0) + 1; });
-    });
-    const wanted = /fintech|health|credit|contact/i;
-    return json(200, {
-      check: "tagcheck-4", boardKind: board && board.board_kind,
-      sourceColumns: board && board.columns.filter(function (c) { return /source/i.test(c.title); }),
-      boardTags: board && board.tags,
-      accountTags: ((ir.data && ir.data.tags) || []).filter(function (t) { return wanted.test(t.name); }),
-      tagIdsOnRealRows: used, rows: rows, errors: ir.errors
-    });
-  }
-
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
