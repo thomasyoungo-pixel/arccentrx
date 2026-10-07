@@ -58,6 +58,21 @@ exports.handler = async function (event) {
       const noBoard = await gql(tq, { name: n }, dh).catch(e => ({ thrown: String(e) }));
       out.lookups[n] = { withBoard: withBoard.data || withBoard.errors || withBoard, noBoard: noBoard.data || noBoard.errors || noBoard };
     }
+    // Experiment: write the Fintech tag to one test row several ways, read back.
+    const exp = {};
+    const colQ = "query ($b: [ID!]) { boards (ids: $b) { columns (ids: [\"tag_mm77crcb\"]) { settings_str } } }";
+    exp.columnSettings = await gql(colQ, { b: [WEBSITE_LEADS] }, dh).then(r => r.data || r.errors);
+    const boardTag = out.lookups.Fintech.withBoard.create_or_get_tag.id;
+    const acctTag = out.lookups.Fintech.noBoard.create_or_get_tag.id;
+    const cq = "mutation ($board: ID!, $name: String!, $cols: JSON) { create_item (board_id: $board, item_name: $name, column_values: $cols) { id column_values (ids: [\"tag_mm77crcb\"]) { value text } } }";
+    exp.createBoardTag = await gql(cq, { board: WEBSITE_LEADS, name: "TEST tag experiment A", cols: JSON.stringify({ tag_mm77crcb: { tag_ids: [Number(boardTag)] } }) }, dh).then(r => r.data || r.errors);
+    exp.createAcctTag = await gql(cq, { board: WEBSITE_LEADS, name: "TEST tag experiment B", cols: JSON.stringify({ tag_mm77crcb: { tag_ids: [Number(acctTag)] } }) }, dh).then(r => r.data || r.errors);
+    try {
+      const itemId = exp.createBoardTag.create_item.id;
+      const chq = "mutation ($board: ID!, $item: ID!, $val: JSON!) { change_column_value (board_id: $board, item_id: $item, column_id: \"tag_mm77crcb\", value: $val) { id column_values (ids: [\"tag_mm77crcb\"]) { value text } } }";
+      exp.changeAfterCreate = await gql(chq, { board: WEBSITE_LEADS, item: itemId, val: JSON.stringify({ tag_ids: [Number(boardTag)] }) }, dh).then(r => r.data || r.errors);
+    } catch (e) { exp.changeAfterCreate = String(e); }
+    out.experiment = exp;
     const iq = "query ($b: [ID!]) { boards (ids: $b) { items_page (limit: 100) { items { name column_values (ids: [\"tag_mm77crcb\"]) { value text } } } } }";
     const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh).catch(e => ({ thrown: String(e) }));
     try {
