@@ -46,20 +46,6 @@ const DEFAULT_BOARD_SLUG = "services-overview";
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
 
-  // TEMPORARY: GET ?tagdebug=1 diagnoses tag lookup on Website Leads and reads
-  // the Tags value of the TEST rows only. Remove once tagging is fixed.
-  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagdebug) {
-    if (!token) return json(500, { error: "Server not configured" });
-    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    const out = { version: "tagdebug-2", testRows: null };
-    const iq = "query ($b: [ID!]) { boards (ids: $b) { items_page (limit: 100) { items { name column_values (ids: [\"tag_mm77crcb\"]) { value text } } } } }";
-    const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh).catch(e => ({ thrown: String(e) }));
-    try {
-      out.testRows = ir.data.boards[0].items_page.items.filter(i => /^TEST /.test(i.name));
-    } catch (e) { out.testRows = ir.errors || ir; }
-    return json(200, out);
-  }
-
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
@@ -170,7 +156,6 @@ exports.handler = async function (event) {
     // Applied after the item exists: setting tags inside create_item alongside
     // create_labels_if_missing leaves the Tags column empty on this board.
     let tagToApply = null;
-    const tagDebug = {}; // TEMPORARY
     const tagsCol = findCol(cols, { title: "Tags", type: "tags" });
     if (tagsCol && tag) {
       try {
@@ -180,7 +165,6 @@ exports.handler = async function (event) {
           "}";
         const tagRes = await gql(tagQuery, { name: tag, board: String(boardId) }, headers);
         const tagId = tagRes && tagRes.data && tagRes.data.create_or_get_tag && tagRes.data.create_or_get_tag.id;
-        tagDebug.lookup = tagRes;
         if (tagId) tagToApply = { colId: tagsCol.id, id: Number(tagId) };
       } catch (e) {
         console.error("create_or_get_tag failed (skipping tag)", e);
@@ -217,7 +201,6 @@ exports.handler = async function (event) {
         val: JSON.stringify({ tag_ids: [tagToApply.id] })
       }, headers).catch(function (e) { return { errors: String(e) }; });
       if (tagged && tagged.errors) console.error("Applying tag failed", JSON.stringify(tagged.errors));
-      tagDebug.apply = tagged;
     }
 
     // 2) Post the full submission as an update on the item (belt-and-suspenders).
@@ -242,7 +225,7 @@ exports.handler = async function (event) {
       // The item was created either way — don't fail the whole request.
     }
 
-    return json(200, { ok: true, tagDebug: tagDebug }); // TEMPORARY tagDebug
+    return json(200, { ok: true });
   } catch (err) {
     console.error("White paper function error", err);
     return json(502, { error: "Could not save contact" });
