@@ -30,31 +30,21 @@ const MONDAY_API = "https://api.monday.com/v2";
 
 // Whitelisted boards, keyed by the slug the resource card sends. The first
 // entry is the default when a request arrives with no (or an unknown) slug.
+const WEBSITE_LEADS = "18431243427"; // "Website Leads" board: every site lead lands here
 const BOARDS = {
-  "services-overview": "18431243427",
+  "services-overview": WEBSITE_LEADS,
   "firm-overview": "18431249717",
-  "industry-fintech": "18431386732",
-  // TODO: point this at a dedicated credit-unions board once created.
-  // Temporarily routed to the services board so the flow works end to end.
-  "industry-credit-unions": "18431243427",
-  // TODO: point this at a dedicated healthcare board once created.
-  // Temporarily routed to the services board so the flow works end to end.
-  "industry-healthcare": "18431243427"
+  // Contact and industry landing pages all go to Website Leads, told apart by
+  // the Tags column (ContactUs, Fintech, CreditUnions, Healthcare).
+  "contact": WEBSITE_LEADS,
+  "industry-fintech": WEBSITE_LEADS,
+  "industry-credit-unions": WEBSITE_LEADS,
+  "industry-healthcare": WEBSITE_LEADS
 };
 const DEFAULT_BOARD_SLUG = "services-overview";
 
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
-
-  // TEMPORARY: GET ?debug=1 returns the leads board's columns and tag names
-  // (ids/titles/types only, no lead data). Remove after confirming mapping.
-  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.debug) {
-    if (!token) return json(500, { error: "Server not configured" });
-    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    const q = "query ($b: [ID!]) { boards (ids: $b) { name columns { id title type } tags { id name } } }";
-    const r = await gql(q, { b: ["18431243427"] }, dh);
-    return json(200, r.data || r);
-  }
 
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
@@ -83,6 +73,7 @@ exports.handler = async function (event) {
   const sourceDetail = (body.sourceDetail || "").toString().trim().slice(0, 400);
   const tag = (body.tag || "").toString().trim().slice(0, 60);
   const message = (body.message || "").toString().trim().slice(0, 5000);
+  const subject = (body.subject || "").toString().trim().slice(0, 300);
 
   // Honeypot (in case the browser check is bypassed): silently accept and drop.
   if (body.company_website) {
@@ -141,10 +132,12 @@ exports.handler = async function (event) {
       columnValues[paperCol.id] = colValue(paperCol.type, paper);
     }
 
-    // Message -> "Message" column, if one exists. Always captured in Updates.
-    const messageCol = findCol(cols, { title: "Message" });
-    if (messageCol && message) {
-      columnValues[messageCol.id] = colValue(messageCol.type, message);
+    // Message (plus subject, if given) -> "Message" or "Comments" column, if one
+    // exists. Always captured in Updates too.
+    const messageCol = findCol(cols, { title: "Message" }) || findCol(cols, { title: "Comments" });
+    const messageText = (subject ? "Subject: " + subject + (message ? "\n\n" : "") : "") + message;
+    if (messageCol && messageText) {
+      columnValues[messageCol.id] = colValue(messageCol.type, messageText);
     }
     const dateCol = findCol(cols, { title: "Request Date", type: "date" });
     if (dateCol) {
@@ -196,13 +189,14 @@ exports.handler = async function (event) {
 
     // 2) Post the full submission as an update on the item (belt-and-suspenders).
     const detail =
-      (message ? "Contact request" : "Download request") + "\n\n" +
+      (message || subject ? "Contact request" : "Download request") + "\n\n" +
       "Name: " + (name || "(not given)") + "\n" +
       "Email: " + email +
       (company ? "\nCompany: " + company : "") +
       (paper ? "\nPaper: " + paper : "") +
       (source ? "\nSource: " + source : "") +
       (sourceDetail ? "\nSource detail: " + sourceDetail : "") +
+      (subject ? "\nSubject: " + subject : "") +
       (message ? "\n\nMessage:\n" + message : "");
 
     const updateQuery =

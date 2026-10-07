@@ -215,17 +215,20 @@
 
       if (!form.checkValidity()) { form.reportValidity(); return; }
 
+      // Goes to the "Website Leads" Monday board, tagged as a main-site contact.
       var payload = {
         name: (form.elements.name && form.elements.name.value || "").trim(),
         email: (form.elements.email && form.elements.email.value || "").trim(),
         subject: (form.elements.subject && form.elements.subject.value || "").trim(),
-        message: (form.elements.message && form.elements.message.value || "").trim()
+        message: (form.elements.message && form.elements.message.value || "").trim(),
+        board: "contact",
+        tag: "Contact Us"
       };
 
       if (btn) { btn.disabled = true; }
       setNote("Sending…", false);
 
-      fetch("/.netlify/functions/contact", {
+      fetch("/.netlify/functions/whitepaper", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
