@@ -51,28 +51,7 @@ exports.handler = async function (event) {
   if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagdebug) {
     if (!token) return json(500, { error: "Server not configured" });
     const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    const out = { lookups: {}, testRows: null };
-    const tq = "mutation ($name: String!, $board: ID) { create_or_get_tag (tag_name: $name, board_id: $board) { id name } }";
-    for (const n of ["Fintech", "Healthcare", "CreditUnions", "Credit Unions", "ContactUs"]) {
-      const withBoard = await gql(tq, { name: n, board: WEBSITE_LEADS }, dh).catch(e => ({ thrown: String(e) }));
-      const noBoard = await gql(tq, { name: n }, dh).catch(e => ({ thrown: String(e) }));
-      out.lookups[n] = { withBoard: withBoard.data || withBoard.errors || withBoard, noBoard: noBoard.data || noBoard.errors || noBoard };
-    }
-    // Experiment: write the Fintech tag to one test row several ways, read back.
-    const exp = {};
-    const colQ = "query ($b: [ID!]) { boards (ids: $b) { columns (ids: [\"tag_mm77crcb\"]) { settings_str } } }";
-    exp.columnSettings = await gql(colQ, { b: [WEBSITE_LEADS] }, dh).then(r => r.data || r.errors);
-    const boardTag = out.lookups.Fintech.withBoard.create_or_get_tag.id;
-    const acctTag = out.lookups.Fintech.noBoard.create_or_get_tag.id;
-    const cq = "mutation ($board: ID!, $name: String!, $cols: JSON) { create_item (board_id: $board, item_name: $name, column_values: $cols) { id column_values (ids: [\"tag_mm77crcb\"]) { value text } } }";
-    exp.createBoardTag = await gql(cq, { board: WEBSITE_LEADS, name: "TEST tag experiment A", cols: JSON.stringify({ tag_mm77crcb: { tag_ids: [Number(boardTag)] } }) }, dh).then(r => r.data || r.errors);
-    exp.createAcctTag = await gql(cq, { board: WEBSITE_LEADS, name: "TEST tag experiment B", cols: JSON.stringify({ tag_mm77crcb: { tag_ids: [Number(acctTag)] } }) }, dh).then(r => r.data || r.errors);
-    try {
-      const itemId = exp.createBoardTag.create_item.id;
-      const chq = "mutation ($board: ID!, $item: ID!, $val: JSON!) { change_column_value (board_id: $board, item_id: $item, column_id: \"tag_mm77crcb\", value: $val) { id column_values (ids: [\"tag_mm77crcb\"]) { value text } } }";
-      exp.changeAfterCreate = await gql(chq, { board: WEBSITE_LEADS, item: itemId, val: JSON.stringify({ tag_ids: [Number(boardTag)] }) }, dh).then(r => r.data || r.errors);
-    } catch (e) { exp.changeAfterCreate = String(e); }
-    out.experiment = exp;
+    const out = { testRows: null };
     const iq = "query ($b: [ID!]) { boards (ids: $b) { items_page (limit: 100) { items { name column_values (ids: [\"tag_mm77crcb\"]) { value text } } } } }";
     const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh).catch(e => ({ thrown: String(e) }));
     try {
@@ -188,6 +167,9 @@ exports.handler = async function (event) {
 
     // Tag -> "Tags" column, if one exists. Tags need an id, so look the tag up
     // (creating it if new) and apply its id. The industry page sends "Fintech".
+    // Applied after the item exists: setting tags inside create_item alongside
+    // create_labels_if_missing leaves the Tags column empty on this board.
+    let tagToApply = null;
     const tagsCol = findCol(cols, { title: "Tags", type: "tags" });
     if (tagsCol && tag) {
       try {
@@ -197,7 +179,7 @@ exports.handler = async function (event) {
           "}";
         const tagRes = await gql(tagQuery, { name: tag, board: String(boardId) }, headers);
         const tagId = tagRes && tagRes.data && tagRes.data.create_or_get_tag && tagRes.data.create_or_get_tag.id;
-        if (tagId) columnValues[tagsCol.id] = { tag_ids: [Number(tagId)] };
+        if (tagId) tagToApply = { colId: tagsCol.id, id: Number(tagId) };
       } catch (e) {
         console.error("create_or_get_tag failed (skipping tag)", e);
       }
@@ -220,6 +202,19 @@ exports.handler = async function (event) {
     if (!itemId) {
       console.error("Monday create_item failed", JSON.stringify(created));
       return json(502, { error: "Could not save contact" });
+    }
+
+    // 1b) Apply the tag now that the item exists.
+    if (tagToApply) {
+      const tagSetQuery =
+        "mutation ($board: ID!, $item: ID!, $col: String!, $val: JSON!) {" +
+        "  change_column_value (board_id: $board, item_id: $item, column_id: $col, value: $val) { id }" +
+        "}";
+      const tagged = await gql(tagSetQuery, {
+        board: String(boardId), item: String(itemId), col: tagToApply.colId,
+        val: JSON.stringify({ tag_ids: [tagToApply.id] })
+      }, headers).catch(function (e) { return { errors: String(e) }; });
+      if (tagged && tagged.errors) console.error("Applying tag failed", JSON.stringify(tagged.errors));
     }
 
     // 2) Post the full submission as an update on the item (belt-and-suspenders).
