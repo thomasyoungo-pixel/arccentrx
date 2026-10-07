@@ -35,7 +35,7 @@ const BOARDS = {
   "services-overview": WEBSITE_LEADS,
   "firm-overview": "18431249717",
   // Contact and industry landing pages all go to Website Leads, told apart by
-  // the Tags column (ContactUs, Fintech, CreditUnions, Healthcare).
+  // the Source dropdown (Contact Us, Fintech, Credit Unions, Healthcare).
   "contact": WEBSITE_LEADS,
   "industry-fintech": WEBSITE_LEADS,
   "industry-credit-unions": WEBSITE_LEADS,
@@ -71,6 +71,8 @@ exports.handler = async function (event) {
   const paper = (body.paper || "").toString().trim().slice(0, 300);
   const source = (body.source || "").toString().trim().slice(0, 200);
   const sourceDetail = (body.sourceDetail || "").toString().trim().slice(0, 400);
+  // The page the lead came from (Contact Us, Fintech, Credit Unions, Healthcare).
+  // Written to the Source dropdown only; Tags are left for Monday automations.
   const tag = (body.tag || "").toString().trim().slice(0, 60);
   const message = (body.message || "").toString().trim().slice(0, 5000);
   const subject = (body.subject || "").toString().trim().slice(0, 300);
@@ -152,26 +154,6 @@ exports.handler = async function (event) {
       columnValues[sourceCol.id] = colValue(sourceCol.type, tag);
     }
 
-    // Tag -> "Tags" column, if one exists. Tags need an id, so look the tag up
-    // (creating it if new) and apply its id. The industry page sends "Fintech".
-    // Applied after the item exists: setting tags inside create_item alongside
-    // create_labels_if_missing leaves the Tags column empty on this board.
-    let tagToApply = null;
-    const tagsCol = findCol(cols, { title: "Tags", type: "tags" });
-    if (tagsCol && tag) {
-      try {
-        const tagQuery =
-          "mutation ($name: String!, $board: ID) {" +
-          "  create_or_get_tag (tag_name: $name, board_id: $board) { id }" +
-          "}";
-        const tagRes = await gql(tagQuery, { name: tag, board: String(boardId) }, headers);
-        const tagId = tagRes && tagRes.data && tagRes.data.create_or_get_tag && tagRes.data.create_or_get_tag.id;
-        if (tagId) tagToApply = { colId: tagsCol.id, id: Number(tagId) };
-      } catch (e) {
-        console.error("create_or_get_tag failed (skipping tag)", e);
-      }
-    }
-
     // 1) Create the item.
     const createQuery =
       "mutation ($board: ID!, $group: String, $name: String!, $cols: JSON) {" +
@@ -189,19 +171,6 @@ exports.handler = async function (event) {
     if (!itemId) {
       console.error("Monday create_item failed", JSON.stringify(created));
       return json(502, { error: "Could not save contact" });
-    }
-
-    // 1b) Apply the tag now that the item exists.
-    if (tagToApply) {
-      const tagSetQuery =
-        "mutation ($board: ID!, $item: ID!, $col: String!, $val: JSON!) {" +
-        "  change_column_value (board_id: $board, item_id: $item, column_id: $col, value: $val) { id }" +
-        "}";
-      const tagged = await gql(tagSetQuery, {
-        board: String(boardId), item: String(itemId), col: tagToApply.colId,
-        val: JSON.stringify({ tag_ids: [tagToApply.id] })
-      }, headers).catch(function (e) { return { errors: String(e) }; });
-      if (tagged && tagged.errors) console.error("Applying tag failed", JSON.stringify(tagged.errors));
     }
 
     // 2) Post the full submission as an update on the item (belt-and-suspenders).
