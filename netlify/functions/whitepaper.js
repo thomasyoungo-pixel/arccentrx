@@ -51,7 +51,7 @@ exports.handler = async function (event) {
   if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagdebug) {
     if (!token) return json(500, { error: "Server not configured" });
     const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    const out = { testRows: null };
+    const out = { version: "tagdebug-2", testRows: null };
     const iq = "query ($b: [ID!]) { boards (ids: $b) { items_page (limit: 100) { items { name column_values (ids: [\"tag_mm77crcb\"]) { value text } } } } }";
     const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh).catch(e => ({ thrown: String(e) }));
     try {
