@@ -51,22 +51,26 @@ exports.handler = async function (event) {
   if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.tagcheck) {
     if (!token) return json(500, { error: "Server not configured" });
     const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    const iq = "query ($b: [ID!]) { tags { id name } boards (ids: $b) { board_kind columns { id title type settings_str } tags { id name } items_page (limit: 200) { items { name column_values (ids: [\"tag_mm77crcb\"]) { text value } } } } }";
+    const iq = "query ($b: [ID!]) { tags { id name } boards (ids: $b) { board_kind columns { id title type settings_str } tags { id name } items_page (limit: 200) { items { name column_values (ids: [\"tag_mm77crcb\", \"dropdown_mm7x19ra\"]) { id text value } } } } }";
     const ir = await gql(iq, { b: [WEBSITE_LEADS] }, dh);
     const board = ir.data && ir.data.boards[0];
     const items = (board && board.items_page.items) || [];
     const rows = items
-      .filter(function (i) { return /^TEST final/.test(i.name); })
-      .map(function (i) { return { name: i.name, tags: i.column_values[0].text || "", value: i.column_values[0].value }; });
+      .filter(function (i) { return /^TEST source/.test(i.name); })
+      .map(function (i) {
+        const cv = {}; i.column_values.forEach(function (c) { cv[c.id] = c.text || ""; });
+        return { name: i.name, tags: cv.tag_mm77crcb, source: cv.dropdown_mm7x19ra };
+      });
     // Tag ids used on real (non-TEST) rows, counted only: shows what the UI attaches.
     const used = {};
     items.filter(function (i) { return !/^TEST /.test(i.name); }).forEach(function (i) {
-      const v = i.column_values[0].value; if (!v) return;
+      const tc = i.column_values.filter(function (c) { return c.id === "tag_mm77crcb"; })[0];
+      const v = tc && tc.value; if (!v) return;
       (JSON.parse(v).tag_ids || []).forEach(function (t) { used[t] = (used[t] || 0) + 1; });
     });
     const wanted = /fintech|health|credit|contact/i;
     return json(200, {
-      check: "tagcheck-3", boardKind: board && board.board_kind,
+      check: "tagcheck-4", boardKind: board && board.board_kind,
       sourceColumns: board && board.columns.filter(function (c) { return /source/i.test(c.title); }),
       boardTags: board && board.tags,
       accountTags: ((ir.data && ir.data.tags) || []).filter(function (t) { return wanted.test(t.name); }),
@@ -172,11 +176,12 @@ exports.handler = async function (event) {
       columnValues[dateCol.id] = { date: new Date().toISOString().slice(0, 10) };
     }
 
-    // Source -> "Source" column, if one exists (where the lead came from:
-    // conference, outreach, ad). Always captured in the Updates note below.
+    // Source -> "Source" column: the site page the lead came from (Contact Us,
+    // Fintech, Credit Unions, Healthcare), matching the board's dropdown labels.
+    // The traffic source (UTM / referrer) is recorded in the Updates note below.
     const sourceCol = findCol(cols, { title: "Source" });
-    if (sourceCol && source) {
-      columnValues[sourceCol.id] = colValue(sourceCol.type, source);
+    if (sourceCol && tag) {
+      columnValues[sourceCol.id] = colValue(sourceCol.type, tag);
     }
 
     // Tag -> "Tags" column, if one exists. Tags need an id, so look the tag up
