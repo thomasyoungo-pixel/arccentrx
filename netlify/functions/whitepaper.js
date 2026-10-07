@@ -46,6 +46,15 @@ const DEFAULT_BOARD_SLUG = "services-overview";
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
 
+  // TEMPORARY: GET ?sourcelabels=1 returns the Source dropdown's label names.
+  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.sourcelabels) {
+    if (!token) return json(500, { error: "Server not configured" });
+    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
+    const r = await gql("query ($b: [ID!]) { boards (ids: $b) { columns (ids: [\"dropdown_mm7x19ra\"]) { settings_str } } }", { b: [WEBSITE_LEADS] }, dh);
+    const st = JSON.parse(r.data.boards[0].columns[0].settings_str);
+    return json(200, { check: "sourcelabels-1", labels: st.labels.map(function (l) { return l.name; }) });
+  }
+
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
   }
