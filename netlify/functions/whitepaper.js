@@ -33,7 +33,7 @@ const MONDAY_API = "https://api.monday.com/v2";
 const WEBSITE_LEADS = "18431243427"; // "Website Leads" board: every site lead lands here
 const BOARDS = {
   "services-overview": WEBSITE_LEADS,
-  "firm-overview": "18431249717",
+  "firm-overview": WEBSITE_LEADS,
   // Contact and industry landing pages all go to Website Leads, told apart by
   // the Source dropdown (Contact Us, Fintech, Credit Unions, Healthcare).
   "contact": WEBSITE_LEADS,
@@ -45,15 +45,6 @@ const DEFAULT_BOARD_SLUG = "services-overview";
 
 exports.handler = async function (event) {
   const token = process.env.MONDAY_API_TOKEN;
-
-  // TEMPORARY: GET ?sourcelabels=1 returns the Source dropdown's label names.
-  if (event.httpMethod === "GET" && event.queryStringParameters && event.queryStringParameters.sourcelabels) {
-    if (!token) return json(500, { error: "Server not configured" });
-    const dh = { "Content-Type": "application/json", Authorization: token, "API-Version": "2023-10" };
-    const r = await gql("query ($b: [ID!]) { boards (ids: $b) { columns (ids: [\"dropdown_mm7x19ra\"]) { settings_str } } }", { b: [WEBSITE_LEADS] }, dh);
-    const st = JSON.parse(r.data.boards[0].columns[0].settings_str);
-    return json(200, { check: "sourcelabels-1", labels: st.labels.map(function (l) { return l.name; }) });
-  }
 
   if (event.httpMethod !== "POST") {
     return json(405, { error: "Method not allowed" });
@@ -80,7 +71,8 @@ exports.handler = async function (event) {
   const paper = (body.paper || "").toString().trim().slice(0, 300);
   const source = (body.source || "").toString().trim().slice(0, 200);
   const sourceDetail = (body.sourceDetail || "").toString().trim().slice(0, 400);
-  // The page the lead came from (Contact Us, Fintech, Credit Unions, Healthcare).
+  // Where the lead came from (Contact Us, Fintech, Credit Unions, Healthcare,
+  // Firm Overview, Services Overview), matching the Source dropdown labels.
   // Written to the Source dropdown only; Tags are left for Monday automations.
   const tag = (body.tag || "").toString().trim().slice(0, 60);
   const message = (body.message || "").toString().trim().slice(0, 5000);
