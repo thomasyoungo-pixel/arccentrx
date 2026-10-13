@@ -242,7 +242,7 @@
           form.reset();
         })
         .catch(function () {
-          setNote("Something went wrong sending your message. Please email hello@arccentrx.com and we'll get right back to you.", true);
+          setNote("Something went wrong sending your message. Please email info@arccentrx.com and we'll get right back to you.", true);
         })
         .finally(function () {
           if (btn) { btn.disabled = false; }
