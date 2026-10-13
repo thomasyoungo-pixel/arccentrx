@@ -1,0 +1,27 @@
+# ArcCentrx: search engines and AI assistants are welcome to read this site.
+
+User-agent: *
+User-agent: Googlebot
+User-agent: Google-Extended
+User-agent: Bingbot
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: anthropic-ai
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: DuckAssistBot
+User-agent: meta-externalagent
+Allow: /
+# Tracking redirects and retired pages are not content.
+Disallow: /go/
+Disallow: /archive/
+Disallow: /private
+
+Sitemap: https://arccentrx.com/sitemap.xml

@@ -849,3 +849,9 @@ section[id] { scroll-margin-top: 92px; }
           mask-image: radial-gradient(135% 115% at 72% 36%, #000 36%, rgba(0,0,0,0) 86%);
 }
 .hero-map svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* Plain-HTML menu/footer links inside the header/footer mounts. site.js replaces
+   them with the real header and footer; they exist so crawlers that don't run
+   JavaScript (most AI crawlers) can still follow links. Hidden once JS runs. */
+.static-nav { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 14px 24px; font-size: 14px; }
+.js .static-nav { display: none; }

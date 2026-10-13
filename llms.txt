@@ -1,0 +1,42 @@
+# ArcCentrx
+
+> ArcCentrx is a consulting and execution firm for enterprise and mid-market companies facing transformation, scale, transaction, technology, and operating challenges. It brings management consulting and deep operational experience into one team that defines the plan and runs it: eight standalone services, delivered through one methodology (Assess, Align, Accelerate). Tagline: Strategy Built to Run.
+
+ArcCentrx, LLC is based in Henderson, Nevada. The founding team has overseen $2 billion in technology spend, worked with 25+ Fortune 500 companies, and been part of 6 exits. Clients can scope one service or several.
+
+## Services
+
+- [AI Strategy](https://arccentrx.com/services.html#ai-strategy): AI spend and utilization audits, use case prioritization, workflow redesign, model governance, build versus buy.
+- [Growth Strategy](https://arccentrx.com/services.html#growth-strategy): segmentation and ICP, pricing and packaging, sales infrastructure and CRM, funnel analysis, market entry.
+- [Technology Infrastructure](https://arccentrx.com/services.html#technology-infrastructure): architecture and scalability, payments and ledger design, KYC and onboarding, sponsor bank strategy, platform migration.
+- [Operational Optimization](https://arccentrx.com/services.html#operational-optimization): process redesign, cost to serve, cost takeout, quality and rework reduction, vendor rationalization.
+- [M&A Readiness and Integration](https://arccentrx.com/services.html#ma-readiness): sell-side readiness, buy-side diligence, integration planning, systems consolidation, synergy tracking.
+- [Compliance and Governance](https://arccentrx.com/services.html#compliance-governance): SOC 2, HIPAA, PCI, accessibility, state licensing, AI and model governance, audit readiness.
+- [Organizational Design](https://arccentrx.com/services.html#organizational-design): operating model, roles and accountability, decision rights, workforce planning, leadership team design.
+- [Reporting and Analytics](https://arccentrx.com/services.html#reporting-analytics): metric definitions, executive and board reporting, dashboards, data pipeline review, reporting automation.
+
+## How engagements run
+
+- [Methodology](https://arccentrx.com/methodology.html): every engagement runs in order. Assess what is actually going on, Align the teams on a direction, then Accelerate delivery, with the same people from plan through execution.
+
+## Industries
+
+- [ArcCentrx for Fintech](https://arccentrx.com/fintech.html): operating inside the fintech stack since 2013, covering issuing, processing, sponsor bank relationships, program management, compliance, and go-to-market.
+- [ArcCentrx for Credit Unions](https://arccentrx.com/credit-unions.html): outcome-first help for member-owned institutions with $100M+ in share deposits facing conversions, renegotiations, mergers, or major technology decisions.
+- [ArcCentrx for Healthcare](https://arccentrx.com/healthcare.html): healthcare market entry, covering demand assessment, launch readiness, referral and buyer relationships, and channel strategy.
+
+## Team
+
+- [About ArcCentrx](https://arccentrx.com/about.html)
+- [Mike Panzarella, CEO and Founder](https://arccentrx.com/founder-mike.html): 25+ years across banking, fintech, and technology; former Chief Product Officer at Green Dot and COO/CTO/CPO at Rocket Dollar.
+- [JoLynn Smith, COO and Founder](https://arccentrx.com/founder-jolynn.html): 20+ years in healthcare growth, market expansion, and business transformation, including UnitedHealthcare and Optum.
+- [Thomas Young, CMO and Founder](https://arccentrx.com/founder-thomas.html): fintech marketing and growth executive; co-founder of Rocket Dollar.
+
+## Resources
+
+- [Resources](https://arccentrx.com/resources.html): firm overview and services overview downloads.
+- [Insights](https://arccentrx.com/blog.html): articles from the team.
+
+## Contact
+
+- [Get in touch](https://arccentrx.com/contact.html): hello@arccentrx.com, (480) 258-2234
