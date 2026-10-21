@@ -1,6 +1,3 @@
-# Old http://www links go straight to the main domain in one hop.
-http://www.arccentrx.com/*  https://arccentrx.com/:splat  301!
-
 # Retired pillar pages -> methodology (301). Archived copies live in /archive.
 /assess.html        /methodology#assess       301
 /align.html         /methodology#align        301
