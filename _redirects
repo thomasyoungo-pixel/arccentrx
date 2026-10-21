@@ -1,18 +1,22 @@
-# Retired pillar pages -> methodology (301). Archived copies live in /archive.
-/assess.html        /methodology.html#assess       301
-/align.html         /methodology.html#align        301
-/accelerate.html    /methodology.html#accelerate   301
-/assess             /methodology.html#assess       301
-/align              /methodology.html#align        301
-/accelerate         /methodology.html#accelerate   301
+# Old http://www links go straight to the main domain in one hop.
+http://www.arccentrx.com/*  https://arccentrx.com/:splat  301!
 
-# WIP: keep the unfinished Private sub-site off the public site
-/private.html   /   301
-/private        /   301
+# Retired pillar pages -> methodology (301). Archived copies live in /archive.
+/assess.html        /methodology#assess       301
+/align.html         /methodology#align        301
+/accelerate.html    /methodology#accelerate   301
+/assess             /methodology#assess       301
+/align              /methodology#align        301
+/accelerate         /methodology#accelerate   301
+
+# WIP: keep the unfinished Private sub-site off the public site.
+# The ! forces the redirect even though private.html exists as a file.
+/private.html   /   301!
+/private        /   301!
 
 # White Papers page renamed to Resources
-/whitepapers.html   /resources.html   301
-/whitepapers        /resources.html   301
+/whitepapers.html   /resources   301
+/whitepapers        /resources   301
 
 # Trackable PDF links (log a GA4 download, then open the PDF)
 /go/services-overview   /go/services-overview.html   200
