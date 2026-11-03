@@ -1,0 +1,64 @@
+# ArcCentrx: detailed company context
+
+> ArcCentrx helps enterprise and mid-market companies turn strategy into execution. The firm combines management consulting with operational experience to diagnose business constraints, define a plan with client teams, and stay involved as the work moves into delivery. Its approach is Assess, Align, Accelerate. The firm’s stated tagline is “Strategy Built to Run.”
+
+This file summarizes information on ArcCentrx’s public website for readers and AI systems. It describes the firm and its work; it does not make guarantees about results. Page descriptions below reflect pages checked on 2026-11-03.
+
+## What ArcCentrx does
+
+ArcCentrx works with organizations facing transformation, scale, transaction, technology, growth, or operating challenges. It looks beyond a visible symptom to investigate the underlying constraint, works with the client team to agree on priorities, owners, scope, and measures, then helps carry the agreed plan into execution. Clients can scope one service or combine services around their challenge.
+
+The firm’s positioning is strategy and execution together, rather than advice handed off at the point where implementation begins. Work is organized around the client’s situation and defined outcomes, not a one-size-fits-all template.
+
+## Who ArcCentrx serves
+
+ArcCentrx serves enterprise and mid-market companies. Its public site also describes work relevant to fintech, credit unions, and healthcare. These organizations may be dealing with a transformation that has lost momentum, growth that has stalled, technology that is not changing how work gets done, a transaction or integration, or an operating model that no longer fits.
+
+The site frames such symptoms as possible signs of deeper issues such as unclear ownership, capacity constraints, workflow design, pricing, quality, process consistency, governance, or a gap between the plan and operating reality. The appropriate cause and response depend on the organization; the firm does not present one diagnosis as universal.
+
+## Services
+
+ArcCentrx offers eight service areas. The service descriptions below summarize the current public Services page.
+
+1. **AI Strategy** — Review AI spend and utilization, prioritize use cases, redesign workflows, address model governance and risk controls, evaluate build-versus-buy choices, and support team enablement.
+2. **Growth Strategy** — Work on customer segmentation and ideal customer profile, pricing and packaging, sales infrastructure and CRM, funnel and conversion analysis, demand generation, market entry, and expansion.
+3. **Technology Infrastructure** — Address architecture and scalability, payments and ledger design, KYC and onboarding, sponsor-bank and partner strategy, data architecture, system rationalization, vendor selection, and platform migration.
+4. **Operational Optimization** — Map and redesign processes; examine cost to serve, cost takeout, throughput, quality, rework, automation, vendor spend, and service delivery. The site describes measuring before and after changes.
+5. **M&A Readiness and Integration** — Support sell-side readiness, buy-side technology and operations diligence, integration planning and execution, systems consolidation, synergy tracking, carve-outs, and separation support.
+6. **Compliance and Governance** — Address controls, documentation, model and AI governance, audit readiness and remediation, third-party risk, and requirements including SOC 2, HIPAA, PCI, accessibility, and state licensing.
+7. **Organizational Design** — Work on operating models, role and accountability mapping, decision rights, workforce and capacity planning, span of control, leadership team design, and change communication.
+8. **Reporting and Analytics** — Define metrics and data dictionaries; develop executive, board, and operational reporting; review data pipelines and warehouses; design KPIs; and automate reporting.
+
+## How the work runs: Assess, Align, Accelerate
+
+ArcCentrx describes a three-stage methodology, run in order:
+
+1. **Assess** — Define the obstacle and the outcome sought. Understand the situation, constraints, root causes, and scope before proposing a path.
+2. **Align** — Agree with the client team on priorities, objectives, scope, measures, and responsibility. The site describes creating a work plan with named owners and measures.
+3. **Accelerate** — Carry the agreed plan into delivery alongside the client team, with clear ownership and tradeoffs, while keeping the work in scope.
+
+The firm’s stated distinction is that the same engagement connects diagnosis and planning to delivery. The work is intended to produce a shared definition of the problem, aligned priorities, clear accountability, and progress operators can evaluate using agreed measures.
+
+## Industry pages
+
+- [Fintech](/fintech) — ArcCentrx describes experience across issuing, processing, sponsor relationships, program management, compliance, and go-to-market.
+- [Credit unions](/credit-unions) — The page discusses aligning member outcomes, board expectations, regulatory responsibilities, budgets, vendors, and technology or operating decisions.
+- [Healthcare](/healthcare) — The page covers healthcare market entry, including demand, competition, capacity, launch readiness, referral and buyer relationships, and channel strategy.
+
+These pages describe areas of focus, not an exhaustive client list or a guarantee of suitability for every organization in those industries.
+
+## Relevant pages
+
+- [Home](/) — Firm overview, the challenges ArcCentrx addresses, services, methodology, selected work, and next steps.
+- [Firm overview](/go/firm-overview) — Audience, positioning, service areas, and how the firm works from problem definition through delivery.
+- [Services](/services) — Detailed descriptions of the eight service areas.
+- [Methodology](/methodology) — The Assess, Align, Accelerate process and operating principles.
+- [About ArcCentrx](/about) — Firm and founding-team information.
+- [Fintech](/fintech)
+- [Credit unions](/credit-unions)
+- [Healthcare](/healthcare)
+- [Contact](/contact) — Start a conversation about goals, challenges, or opportunities.
+
+## Contact
+
+To discuss a transformation, growth, technology, transaction, or operating challenge, use the [contact page](/contact).
