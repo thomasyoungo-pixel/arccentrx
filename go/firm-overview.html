@@ -14,6 +14,18 @@
 <link rel="apple-touch-icon" href="../favicon.png">
 <link rel="stylesheet" href="../assets/styles.css">
 <link rel="canonical" href="https://arccentrx.com/go/firm-overview">
+<style>
+/* Keep the overview's primary action visible, touch-friendly, and able to wrap. */
+body[data-page="firm-overview"] .overview-contact-action {
+  margin-top: 22px;
+  min-height: 48px;
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.4;
+  justify-content: center;
+  text-align: center;
+}
+</style>
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body data-page="firm-overview">
@@ -24,7 +36,7 @@
     <span class="eyebrow" style="color:var(--teal-bright);">ArcCentrx Firm Overview</span>
     <h1 class="reveal">ArcCentrx helps enterprise and mid-market companies turn strategy into execution.</h1>
     <p class="subhead reveal" data-delay="1">We combine management consulting with operational experience to address transformation, scale, transaction, technology, and operating challenges. We define a plan with your team and stay involved as it moves into delivery.</p>
-    <a class="hero-link reveal" data-delay="2" href="/contact">Discuss your transformation priorities <span class="arw">&rarr;</span></a>
+    <a class="btn btn-bright-teal overview-contact-action" href="/contact.html" data-contact-source="firm_overview" data-contact-placement="hero">Discuss your transformation priorities <span class="arw" aria-hidden="true">&rarr;</span></a>
   </div>
 </section>
 
@@ -83,12 +95,12 @@
   <div class="section-inner reveal">
     <h2>Discuss your transformation priorities.</h2>
     <p>Tell us about the challenge, the work already underway, and what needs to change.</p>
-    <a class="btn btn-bright-teal" href="/contact">Get in touch</a>
+    <a class="btn btn-bright-teal" href="/contact.html" data-contact-source="firm_overview" data-contact-placement="footer">Get in touch</a>
     <p style="margin:24px auto 0;"><a class="hero-link" href="/assets/whitepapers/arccentrx-firm-overview.pdf">Download the firm overview PDF <span class="arw">&rarr;</span></a></p>
   </div>
 </section>
 
 <div data-site-footer><nav class="static-nav" aria-label="Site directory"><a href="/services">Services</a><a href="/methodology">Methodology</a><a href="/about">About</a><a href="/contact">Contact</a><a href="/resources">Resources</a></nav></div>
-<script src="../assets/site.js"></script>
+<script src="../assets/site.js?v=firm-overview-contact-1"></script>
 </body>
 </html>

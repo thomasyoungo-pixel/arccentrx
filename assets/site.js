@@ -192,11 +192,43 @@
     revealEls.forEach(function (el) { el.classList.add("in"); });
   }
 
-  /* ---- Contact form → Netlify Function → Attio ---- */
+  /* ---- Firm overview contact route (navigation is not a lead) ---- */
+  var contactSourceKey = "arccentrx_contact_source";
+  document.addEventListener("click", function (e) {
+    var link = e.target.closest && e.target.closest("a[data-contact-source]");
+    if (!link || link.getAttribute("data-contact-source") !== "firm_overview") return;
+    var placement = link.getAttribute("data-contact-placement") === "hero" ? "hero" : "footer";
+    try {
+      sessionStorage.setItem(contactSourceKey, JSON.stringify({ source: "firm_overview", time: Date.now() }));
+    } catch (err) { /* Navigation and form submission work without storage. */ }
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "contact_cta_click", {
+        cta_source: "firm_overview",
+        cta_placement: placement,
+        link_path: "/contact.html",
+        transport_type: "beacon"
+      });
+    }
+  });
+
+  function inquirySource() {
+    try {
+      var source = JSON.parse(sessionStorage.getItem(contactSourceKey));
+      if (source && source.source === "firm_overview" &&
+          Date.now() >= source.time && Date.now() - source.time < 30 * 60 * 1000) {
+        return "firm_overview";
+      }
+    } catch (err) { /* Missing or blocked storage is not a form error. */ }
+    return "contact";
+  }
+
+  /* ---- Contact form → Netlify Function → CRM ---- */
   var form = document.querySelector("[data-contact-form]");
   if (form) {
+    var inquiryPending = false;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      if (inquiryPending) return;
       var note = form.querySelector(".form-note");
       var btn = form.querySelector('button[type="submit"]');
 
@@ -225,6 +257,8 @@
         tag: "Contact Us"
       };
 
+      inquiryPending = true;
+      var source = inquirySource();
       if (btn) { btn.disabled = true; }
       setNote("Sending…", false);
 
@@ -237,7 +271,17 @@
           if (!res.ok) throw new Error("Bad response " + res.status);
           return res.json();
         })
-        .then(function () {
+        .then(function (result) {
+          if (!result || result.ok !== true) throw new Error("Inquiry not confirmed");
+          // Only confirmed inquiries are leads. Never send form fields to GA4.
+          if (typeof window.gtag === "function") {
+            window.gtag("event", "generate_lead", {
+              form_id: "contact_inquiry",
+              inquiry_source: source,
+              transport_type: "beacon"
+            });
+          }
+          try { sessionStorage.removeItem(contactSourceKey); } catch (err) {}
           setNote("Thanks, your message is on its way. We'll be in touch shortly.", false);
           form.reset();
         })
@@ -245,6 +289,7 @@
           setNote("Something went wrong sending your message. Please email info@arccentrx.com and we'll get right back to you.", true);
         })
         .finally(function () {
+          inquiryPending = false;
           if (btn) { btn.disabled = false; }
         });
     });
